@@ -1,0 +1,9 @@
+// -*- mode: c++; -*-
+
+#ifndef BXRABBITMQ_VERSION_H
+#define BXRABBITMQ_VERSION_H
+
+//! String encoded full version number, e.g. "1.2.3", available at compile time
+#define BXRABBITMQ_LIB_VERSION "@BxRabbitMQ_VERSION_MAJOR@.@BxRabbitMQ_VERSION_MINOR@.@BxRabbitMQ_VERSION_PATCH@"
+
+#endif // BXRABBITMQ_VERSION_H

@@ -1,0 +1,8 @@
+// -*- mode: c++; -*-
+
+#ifndef BXRABBITMQ_RABBITMQ_CONFIG_H
+#define BXRABBITMQ_RABBITMQ_CONFIG_H
+
+//#cmakedefine01 BXRABBITMQ_WITH_BOOST
+
+#endif // BXRABBITMQ_RABBITMQ_CONFIG_H

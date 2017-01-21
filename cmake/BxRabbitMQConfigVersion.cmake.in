@@ -1,0 +1,24 @@
+# - Bayeux/RabbitMQ CMake Versioning File for External Projects
+# This file is configured by Bayeux/RabbitMQ for use with CMake's find_package in
+# Config mode. It enables external projects to determine the version of
+# Bayeux/RabbitMQ found. More importantly, it allows that command to automatically
+# determine whether the found install is compatible with any VERSION that
+# was supplied with find_package.
+#
+# This file is configured by Bayeux/RabbitMQ's CMake system and SHOULD NOT BE EDITED
+#-----------------------------------------------------------------------
+
+# - Installed version as set from CMake
+set(PACKAGE_VERSION "@BxRabbitMQ_VERSION@")
+
+#-----------------------------------------------------------------------
+# Check whether the requested PACKAGE_FIND_VERSION is compatible with this
+# installed version.
+if("${PACKAGE_VERSION}" VERSION_LESS "${PACKAGE_FIND_VERSION}")
+  set(PACKAGE_VERSION_COMPATIBLE FALSE)
+else()
+  set(PACKAGE_VERSION_COMPATIBLE TRUE)
+  if("${PACKAGE_VERSION}" VERSION_EQUAL "${PACKAGE_FIND_VERSION}")
+    set(PACKAGE_VERSION_EXACT TRUE)
+  endif()
+endif()

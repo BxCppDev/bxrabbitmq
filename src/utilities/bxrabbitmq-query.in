@@ -1,0 +1,137 @@
+#!/usr/bin/env bash
+#
+# Utility script used  to locate resources and  files installed within
+# the  BxRabbitMQ library.   This implementation  does not  support a
+# relocatable binary distribution of BxRabbitMQ.
+#
+# Copyright 2016 François Mauger <mauger@lpccaen.in2p3.fr>
+#
+# This file is part of BxRabbitMQ.
+#
+# BxRabbitMQ is free software: you  can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free  Software Foundation, either  version 3 of the  License, or
+# (at your option) any later version.
+#
+# BxRabbitMQ is distributed  in the hope that it will  be useful, but
+# WITHOUT  ANY   WARRANTY;  without  even  the   implied  warranty  of
+# MERCHANTABILITY or  FITNESS FOR A  PARTICULAR PURPOSE.  See  the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with BxRabbitMQ.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Description:  an  utility script  to  fetch  informations about  the
+# current BxRabbitMQ  installation. This  should be very  useful when
+# used from some  client scripts (i.e. wrapper/launcher  scripts for a
+# batch system on a computing farm).
+#
+# Note: this assumes that the library and associated tools are not
+# relocatable.
+
+APPNAME="bxrabbitmq-query"
+prefix_dir="@CMAKE_INSTALL_PREFIX@"
+version_str="@BxRabbitMQ_VERSION@"
+lib_dir="${prefix_dir}/@CMAKE_INSTALL_LIBDIR@"
+bin_dir="${prefix_dir}/@CMAKE_INSTALL_BINDIR@"
+inc_dir="${prefix_dir}/@CMAKE_INSTALL_INCLUDEDIR@"
+data_dir="${prefix_dir}/@CMAKE_INSTALL_DATADIR@/BxRabbitMQ-@BxRabbitMQ_VERSION@"
+cmake_dir="${prefix_dir}/@CMAKE_INSTALL_CMAKEDIR@/BxRabbitMQ-@BxRabbitMQ_VERSION@"
+#resource_dir="${data_dir}/resources"
+#doc_dir="${data_dir}/Documentation"
+#plugin_dir="${lib_dir}/@BxRabbitMQ_PLUGINLIBDIR@"
+
+# List of plugins (experimental):
+# plugins="$(find ${plugin_dir} -name lib*.* -exec basename \{\} \; | cut -d. -f1 | sed -e 's/^lib//g')"
+
+function print_usage()
+{
+
+cat<<EOF
+
+bxrabbitmq-query - Utility script to fetch informations about BxRabbitMQ installation.
+
+Options:
+  -h [ --help ]          Print help.
+
+  --version              Print version.
+
+  --prefix               Print installation prefix directory.
+
+  --libdir               Print library directory.
+
+  --bindir               Print binary directory.
+
+  --incdir               Print include base directory.
+
+  --datadir              Print data base directory.
+
+  --cmakedir             Print CMake config directory.
+
+EOF
+
+#   --docdir               Print documentation base directory.
+
+#   --resourcedir          Print resource base directory.
+
+# EOF
+
+    return
+}
+
+while [ -n "$?" ]; do
+      token="$1"
+      if [ "${token:0:1}" = "-" ]; then
+	  option="${token}"
+	  if [ "${option}" = "--help" -o "${option}" = "-h" ]; then
+	      print_usage
+	      exit 0
+	  elif [ "${option}" = "--version" ]; then
+	      echo ${version_str}
+	      exit 0
+	  elif [ "${option}" = "--prefix" ]; then
+	      echo ${prefix_dir}
+	      exit 0
+	  elif [ "${option}" = "--libdir" ]; then
+	      echo ${lib_dir}
+	      exit 0
+	  elif [ "${option}" = "--bindir" ]; then
+	      echo ${bin_dir}
+	      exit 0
+	  elif [ "${option}" = "--incdir" ]; then
+	      echo ${inc_dir}
+	      exit 0
+	  elif [ "${option}" = "--datadir" ]; then
+	      echo ${data_dir}
+	      exit 0
+	  elif [ "${option}" = "--cmakedir" ]; then
+	      echo ${cmake_dir}
+	      exit 0
+	  # elif [ "${option}" = "--docdir" ]; then
+	  #     echo ${doc_dir}
+	  #     exit 0
+	  # elif [ "${option}" = "--plugindir" ]; then
+	  #     echo ${plugin_dir}
+	  #     exit 0
+	  # elif [ "${option}" = "--resourcedir" ]; then
+	  #     echo ${resource_dir}
+	  #     exit 0
+	  # elif [ "${option}" = "--plugins" ]; then
+	  #     for plugin in ${plugins} ; do
+	  # 	  echo ${plugin}
+	  #     done
+	  #     exit 0
+	  else
+	      echo "error: ${APPNAME}: Invalid option '${option}' !" >&2
+	      print_usage
+	      exit 1
+	  fi
+      else
+	  echo "error: ${APPNAME}: Invalid argument '${token}' !" >&2
+	  print_usage
+	  exit 1
+      fi
+      shift 1
+done
+
+exit 0
