@@ -333,17 +333,20 @@ namespace rabbitmq {
    {
       int              err;
       struct timeval   tv;
+      struct timeval*  ptv = &tv;
       amqp_rpc_reply_t reply;
 
-      tv.tv_sec  = 5;  // timeout 5 sec
-      _amqp_ch_  = num_;
-      _amqp_con_ = amqp_new_connection ();
-      _amqp_soc_ = amqp_tcp_socket_new (_amqp_con_);
+      ptv->tv_sec  = 5;  // timeout 5 sec
+      ptv->tv_usec = 0;
+      _amqp_ch_    = num_;
+      _amqp_con_   = amqp_new_connection ();
+      _amqp_soc_   = amqp_tcp_socket_new (_amqp_con_);
       if (!_amqp_soc_) {
          throw ::rabbitmq::exception ("Unable to create TCP socket");
       }
-      err = amqp_socket_open_noblock (_amqp_soc_, params_.host.c_str (), params_.port, &tv);
+      err = amqp_socket_open_noblock (_amqp_soc_, params_.host.c_str (), params_.port, ptv);
       if (err != AMQP_STATUS_OK) {
+         std::clog << "open socket error = " << err << std::endl;
          throw ::rabbitmq::exception ("Unable to open TCP socket");
       }
       reply = amqp_login (_amqp_con_,

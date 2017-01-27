@@ -34,7 +34,7 @@ See the ``LICENSE.txt`` file and the ``licensing`` directory.
 ```sh
 $ mkdir -p ${HOME}/bxrabbitmq/_source.d/
 $ cd       ${HOME}/bxrabbitmq/_source.d/
-$ git clone https://github.com/fmauger/bxrabbitmq.git
+$ git clone https://github.com/BxCppDev/bxrabbitmq.git
 ```
 
 ```sh
