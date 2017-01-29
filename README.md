@@ -106,7 +106,7 @@ $ cat $(bxrabbitmq-query --prefix)/share/BxRabbitMQ-$(bxrabbitmq-query --version
 
 * CMake  configuration  scripts (i.e.  ``BxRabbitMQConfig.cmake``  and
   ``BxRabbitMQConfigVersion.cmake``)    are    provided    for    client
-  software. The  CMake find_package(BxRabbitmq REQUIRED  CONFIG) command
+  software. The  CMake ``find_package(BxRabbitmq REQUIRED CONFIG)`` command
   can  be   given  the  following   variable  to  find   the  BxRabbitMQ
   installation on your system:
 ```sh
