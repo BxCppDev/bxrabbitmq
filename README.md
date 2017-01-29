@@ -29,21 +29,21 @@ See the ``LICENSE.txt`` file and the ``licensing`` directory.
 
 ### Build and install:
 
-Options:
+CMake options:
 * ``BXRABBITMQ_WITH_MANAGER`` for building RabbitMQ management code (default=``OFF``). This implies
-  cURLpp and BxJsontools
+  cURLpp and BxJsontools (see above).
 
 Prerequisites:
 
-* add ``PKG_CONFIG_PATH`` to RabbitMQ-C client library pkgconfig description ``librabbitmq.pc``:
+* update ``PKG_CONFIG_PATH`` to RabbitMQ-C client library pkgconfig description ``librabbitmq.pc``:
 ```sh
 $ export PKG_CONFIG_PATH=/path/to/rabbitc/install/dir/lib/../pkgconfig:${PKG_CONFIG_PATH}
 ```
-* add ``PATH`` to ``bxjsontools-query`` (only for client management code):
+* update ``PATH`` to ``bxjsontools-query`` (only for client management code):
 ```sh
-$ export PATH=/path/to/bxjsontools/install/dir:${PATH}
+$ export PATH=/path/to/bxjsontools/install/dir/bin:${PATH}
 ```
-* add ``PKG_CONFIG_PATH`` to cURLpp library pkgconfig description ``curlpp.pc`` (only for client management code):
+* update ``PKG_CONFIG_PATH`` to cURLpp library pkgconfig description ``curlpp.pc`` (only for client management code):
 ```sh
 $ export PKG_CONFIG_PATH=/path/to/curlpp/install/dir/lib/../pkgconfig:${PKG_CONFIG_PATH}
 ```
@@ -57,7 +57,7 @@ Cadfaelbrew (https://github.com/SuperNEMO-DBD/brew) is used to build, install an
 the SuperNEMO experiment software. It provides formula for CMake, Doxygen, Boost, curl, libssl...
 and various other software that should be used in place of system packages.
 
-2017-01-29: brew formula for curlpp and bxjsontools are not available yet.
+2017-01-29: brew formula for curlpp, rabbitmq-c, bxjsontools and bxrabbitmq are not available yet.
 
 ### Download the source code from GitHub:
 ```sh
@@ -81,15 +81,15 @@ $ make install
   BxRabbitMQ installation. You may add the following typical line in your
 ``~/.bashrc`` profile:
 ```sh
-export PATH="${HOME}/sw/bxrabbitmq/_install.d/bin:${PATH}"
+export PATH="${HOME}/bxrabbitmq/_install.d/bin:${PATH}"
 ```
   This will give you access to the ``bxrabbitmq-query`` command-line utility:
 ```sh
 $ bxrabbitmq-query --help
 ```
 
-* There is simple examples based on RabbitMQ tutorials (https://www.rabbitmq.com/getstarted.html)
-that illustrates simple usecases.
+* There are simple examples based on RabbitMQ tutorials (https://www.rabbitmq.com/getstarted.html)
+that illustrate simple usecases.
 
 ```sh
 cat $(bxrabbitmq-query --prefix)/share/BxRabbitMQ-$(bxrabbitmq-query --version)/examples/tutorials/README.md
