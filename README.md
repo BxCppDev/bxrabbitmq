@@ -26,8 +26,8 @@ bxrabbitmq makes use or is based on:
 bxrabbitmq depends on:
 * The RabbitMQ-C client library (https://github.com/alanxz/rabbitmq-c),
 * Boost (version >=1.58, but former version may work)
-* cURLpp (https://github.com/jpbarrette/curlpp) for server management,
-* BxJsontools (https://github.com/BxCppDev/bxjsontools) for server management,
+* cURLpp (https://github.com/jpbarrette/curlpp) for optional server management code,
+* BxJsontools (https://github.com/BxCppDev/bxjsontools) for optional server management code,
 * CMake and pkgconfig for build and install.
 
 ## License:
