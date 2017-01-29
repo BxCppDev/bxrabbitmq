@@ -37,12 +37,10 @@ bin_dir="${prefix_dir}/@CMAKE_INSTALL_BINDIR@"
 inc_dir="${prefix_dir}/@CMAKE_INSTALL_INCLUDEDIR@"
 data_dir="${prefix_dir}/@CMAKE_INSTALL_DATADIR@/BxRabbitMQ-@BxRabbitMQ_VERSION@"
 cmake_dir="${prefix_dir}/@CMAKE_INSTALL_CMAKEDIR@/BxRabbitMQ-@BxRabbitMQ_VERSION@"
-#resource_dir="${data_dir}/resources"
-#doc_dir="${data_dir}/Documentation"
-#plugin_dir="${lib_dir}/@BxRabbitMQ_PLUGINLIBDIR@"
-
-# List of plugins (experimental):
-# plugins="$(find ${plugin_dir} -name lib*.* -exec basename \{\} \; | cut -d. -f1 | sed -e 's/^lib//g')"
+with_management=false
+if [ "x${BxRabbitMQ_WITH_MANAGER}" = "x1" ]; then
+    with_management=true
+fi
 
 function print_usage()
 {
@@ -68,14 +66,9 @@ Options:
 
   --cmakedir             Print CMake config directory.
 
+  --with-management      Print is management code is built.
+
 EOF
-
-#   --docdir               Print documentation base directory.
-
-#   --resourcedir          Print resource base directory.
-
-# EOF
-
     return
 }
 
@@ -107,20 +100,9 @@ while [ -n "$?" ]; do
 	  elif [ "${option}" = "--cmakedir" ]; then
 	      echo ${cmake_dir}
 	      exit 0
-	  # elif [ "${option}" = "--docdir" ]; then
-	  #     echo ${doc_dir}
-	  #     exit 0
-	  # elif [ "${option}" = "--plugindir" ]; then
-	  #     echo ${plugin_dir}
-	  #     exit 0
-	  # elif [ "${option}" = "--resourcedir" ]; then
-	  #     echo ${resource_dir}
-	  #     exit 0
-	  # elif [ "${option}" = "--plugins" ]; then
-	  #     for plugin in ${plugins} ; do
-	  # 	  echo ${plugin}
-	  #     done
-	  #     exit 0
+	  elif [ "${option}" = "--with-management" ]; then
+	      echo ${with_management}
+	      exit 0
 	  else
 	      echo "error: ${APPNAME}: Invalid option '${option}' !" >&2
 	      print_usage

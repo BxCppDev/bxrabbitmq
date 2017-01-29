@@ -9,7 +9,9 @@
 #include <rabbitmq/connection.h>
 #include <rabbitmq/channel.h>
 #include <rabbitmq/parameters.h>
+#if BXRABBITMQ_WITH_MANAGER == 1
 #include <rabbitmq/rabbit_mgr.h>
+#endif
 
 namespace rabbitmq {
 
@@ -125,6 +127,7 @@ namespace rabbitmq {
       return;
     }
 
+#if BXRABBITMQ_WITH_MANAGER == 1
     // static
     void test::run_test_4 ()     //  rabbit management
     {
@@ -133,6 +136,7 @@ namespace rabbitmq {
       mgr.test ();
       return;
     }
+#endif // BXRABBITMQ_WITH_MANAGER == 1
 
   } // end of namespace testing
 

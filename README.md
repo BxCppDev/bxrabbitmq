@@ -11,9 +11,16 @@ This is a very preliminary work that needs more development and tests.
 ## Dependencies and inspiration
 
 bxrabbitmq makes use or is based on:
-* rabbitmq-c for the client implemantation (https://github.com/alanxz/rabbitmq-c)
+* rabbitmq-c for the client implementation (https://github.com/alanxz/rabbitmq-c)
 * pika for the client API (https://github.com/pika/pika)
 * RabbitMQ HTTP-based API for server admin (https://www.rabbitmq.com/management.html)
+
+bxrabbitmq depends on:
+* The RabbitMQ-C client library (https://github.com/alanxz/rabbitmq-c),
+* Boost (version >=1.58, but former version may work)
+* cURLpp (https://github.com/jpbarrette/curlpp) for server management,
+* BxJsontools (https://github.com/BxCppDev/bxjsontools) for server management,
+* CMake and pkgconfig for build and install.
 
 ## License:
 
@@ -22,13 +29,35 @@ See the ``LICENSE.txt`` file and the ``licensing`` directory.
 
 ### Build and install:
 
+Options:
+* ``BXRABBITMQ_WITH_MANAGER`` for building RabbitMQ management code (default=``OFF``). This implies
+  cURLpp and BxJsontools
 
-  PRE:
+Prerequisites:
 
-     add PKG_CONFIG_PATH to RabbitC defs
-     => export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/path/to/rabbitc/install/dir/lib/../pkgconfig
+* add ``PKG_CONFIG_PATH`` to RabbitMQ-C client library pkgconfig description ``librabbitmq.pc``:
+```sh
+$ export PKG_CONFIG_PATH=/path/to/rabbitc/install/dir/lib/../pkgconfig:${PKG_CONFIG_PATH}
+```
+* add ``PATH`` to ``bxjsontools-query`` (only for client management code):
+```sh
+$ export PATH=/path/to/bxjsontools/install/dir:${PATH}
+```
+* add ``PKG_CONFIG_PATH`` to cURLpp library pkgconfig description ``curlpp.pc`` (only for client management code):
+```sh
+$ export PKG_CONFIG_PATH=/path/to/curlpp/install/dir/lib/../pkgconfig:${PKG_CONFIG_PATH}
+```
+* make sure Boost is installed on your system and CMake has a proper ``FindBoost`` module:
+```sh
+$ cmake --help-module FindBoost
+```
 
-     add PATH to bxjsontools-query
+**Note for SuperNEMO users:**
+Cadfaelbrew (https://github.com/SuperNEMO-DBD/brew) is used to build, install and manage
+the SuperNEMO experiment software. It provides formula for CMake, Doxygen, Boost, curl, libssl...
+and various other software that should be used in place of system packages.
+
+2017-01-29: brew formula for curlpp and bxjsontools are not available yet.
 
 ### Download the source code from GitHub:
 ```sh
@@ -45,57 +74,6 @@ $ make
 $ make test
 $ make install
 ```
-
-### Enjoy bxrabbitmq from its installation directory:
-```sh
-$ LANG="C" tree ${HOME}/sw/bxrabbitmq/_install.d
-├── bin
-│   └── bxrabbitmq-query
-├── include
-│   └── bayeux
-│       └── rabbitmq
-│           ├── basic_properties.h
-│           ├── channel.h
-│           ├── config.h
-│           ├── connection.h
-│           ├── parameters.h
-│           └── version.h
-├── lib
-│   ├── cmake
-│   │   └── BxRabbitMQ-0.1.0
-│   │       ├── BxRabbitMQConfig.cmake
-│   │       ├── BxRabbitMQConfigVersion.cmake
-│   │       ├── BxRabbitMQTargets.cmake
-│   │       └── BxRabbitMQTargets-noconfig.cmake
-│   └── libBayeux_rabbitmq.so
-└── share
-└── BxRabbitMQ-0.1.0
-├── examples
-│   ├── add_links.sh
-│   ├── management
-│   │   ├── ex1.cxx
-│   │   └── ex2.cxx
-│   └── tutorials
-│       ├── CMakeLists.txt
-│       ├── README.md
-│       ├── t1_receive.cxx
-│       ├── t1_send.cxx
-│       ├── t2_new_task.cxx
-│       ├── t2_worker.cxx
-│       ├── t3_emit_log.cxx
-│       ├── t3_receive_logs.cxx
-│       ├── t4_emit_log_direct.cxx
-│       ├── t4_receive_logs_direct.cxx
-│       ├── t5_emit_logs_topic.cxx
-│       ├── t5_emit_log_topic.cxx
-│       ├── t5_receive_logs_topic.cxx
-│       ├── t6_rpc_client.cxx
-│       └── t6_rpc_server.cxx
-├── LICENSE.txt
-└── licensing
-└── bxrabbitmq
-└── LICENSE.txt
-
 
 ## Using bxrabbitmq:
 
@@ -116,5 +94,3 @@ that illustrates simple usecases.
 ```sh
 cat $(bxrabbitmq-query --prefix)/share/BxRabbitMQ-$(bxrabbitmq-query --version)/examples/tutorials/README.md
 ```
-
-

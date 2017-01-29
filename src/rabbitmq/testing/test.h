@@ -3,6 +3,9 @@
 #ifndef BXRABBITMQ_TESTING_TEST_H
 #define BXRABBITMQ_TESTING_TEST_H
 
+// This project:
+#include <rabbitmq/config.h>
+
 namespace rabbitmq {
 
   namespace testing {
@@ -18,8 +21,10 @@ namespace rabbitmq {
       static void run_test_2 ();
 
       static void run_test_3 ();
-
+#if BXRABBITMQ_WITH_MANAGER == 1
       static void run_test_4 ();
+#endif // BXRABBITMQ_WITH_MANAGER == 1
+
 //
 //      static void run_test_5 ();
 

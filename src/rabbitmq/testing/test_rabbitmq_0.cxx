@@ -23,7 +23,9 @@ int main (int argc, char** argv)
     rabbitmq::testing::test::run_test_2 ();
     rabbitmq::testing::test::run_test_1 (test_num + 20);
     rabbitmq::testing::test::run_test_3 ();
+#if BXRABBITMQ_WITH_MANAGER == 1
     rabbitmq::testing::test::run_test_4 ();
+#endif // BXRABBITMQ_WITH_MANAGER == 1
 
   } catch (std::exception & x) {
     std::cerr << "ERROR: " << x.what() << std::endl;
