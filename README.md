@@ -92,9 +92,7 @@ $ make install
 ```sh
 export PATH="${HOME}/bxrabbitmq/_install.d/bin:${PATH}"
 ```
-
   This  will give  you access  to the  ``bxrabbitmq-query`` command-line utility:
-
 ```sh
 $ bxrabbitmq-query --help
 ```
@@ -102,7 +100,6 @@ $ bxrabbitmq-query --help
 * There   are   simple   examples    based   on   RabbitMQ   tutorials
 (https://www.rabbitmq.com/getstarted.html)   that  illustrate   simple
 usecases.
-
 ```sh
 $ cat $(bxrabbitmq-query --prefix)/share/BxRabbitMQ-$(bxrabbitmq-query --version)/examples/tutorials/README.md
 ```
@@ -112,7 +109,6 @@ $ cat $(bxrabbitmq-query --prefix)/share/BxRabbitMQ-$(bxrabbitmq-query --version
   software. The  CMake find_package(BxRabbitmq REQUIRED  CONFIG) command
   can  be   given  the  following   variable  to  find   the  BxRabbitMQ
   installation on your system:
-
 ```sh
 $ cmake ... -DBxRabbitMQ_DIR="$(bxrabbitmq-query --cmakedir)" ...
-``
+```
