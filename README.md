@@ -7,6 +7,14 @@ administration and Rabbit clients.
 
 This is a very preliminary work that needs more development and tests.
 
+bxrabbitmq  has  been initiated  in  the  framework of  the  SuperNEMO
+physics experiment software.
+
+**Note for SuperNEMO users:**
+
+The RabbitMQ system is used by  the Vire C++ library for communication
+between C++ and  Java implemented services related to  the Control and
+Monitoring System (CMS) of the SuperNEMO experiment.
 
 ## Dependencies and inspiration
 
@@ -53,6 +61,7 @@ $ cmake --help-module FindBoost
 ```
 
 **Note for SuperNEMO users:**
+
 Cadfaelbrew (https://github.com/SuperNEMO-DBD/brew) is used to build, install and manage
 the SuperNEMO experiment software. It provides formula for CMake, Doxygen, Boost, curl, libssl...
 and various other software that should be used in place of system packages.
