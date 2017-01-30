@@ -208,7 +208,8 @@ namespace rabbitmq {
 
    const amqp_bytes_t channel::impl::str_to_amqp (const std::string & str) {
       amqp_bytes_t bytes;
-      bytes = amqp_cstring_bytes (str.c_str ());
+      bytes.len   =         str.size ();
+      bytes.bytes = (char*) str.data ();
       return bytes;
    }
 
