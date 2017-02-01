@@ -88,8 +88,8 @@ endif ()
 set (BxRabbitMQ_LIBRARY Bayeux_rabbitmq CACHE FILE "BxRabbitMQ library (imported)")
 set (BxRabbitMQ_LIBRARIES ${BxRabbitMQ_LIBRARY})
 list (APPEND BxRabbitMQ_LIBRARIES
-   ${BxRabbitMQ_RABBITC_LIBRARY}
-   )
+  ${BxRabbitMQ_RABBITC_LIBRARY}
+  )
 if (BxRabbitMQ_WITH_MANAGER)
   list (APPEND BxRabbitMQ_LIBRARIES
     ${BxRabbitMQ_CURLPP_LIBRARY}
