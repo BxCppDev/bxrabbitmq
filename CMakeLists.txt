@@ -67,12 +67,6 @@ file(RELATIVE_PATH BXRABBITMQ_CMAKEDIR_TO_INCLUDEDIR
   "${CMAKE_INSTALL_FULL_CMAKEDIR}/${BXRABBITMQ_TAG}"
   "${CMAKE_INSTALL_FULL_INCLUDEDIR}"
   )
-# message( STATUS "[debug] BXRABBITMQ_TAG='${BXRABBITMQ_TAG}'")
-# message( STATUS "[debug] CMAKE_INSTALL_INCLUDEDIR='${CMAKE_INSTALL_INCLUDEDIR}'")
-# message( STATUS "[debug] CMAKE_INSTALL_BINDIR='${CMAKE_INSTALL_BINDIR}'")
-# message( STATUS "[debug] CMAKE_INSTALL_LIBDIR='${CMAKE_INSTALL_LIBDIR}'")
-# message( STATUS "[debug] CMAKE_INSTALL_CMAKEDIR='${CMAKE_INSTALL_CMAKEDIR}'")
-# message( STATUS "[debug] CMAKE_INSTALL_DATAROOTDIR='${CMAKE_INSTALL_DATAROOTDIR}'")
 
 # - Option: RabbitMQ server management implies cURLpp and BxJsontools:
 option(BXRABBITMQ_WITH_MANAGER "Build RabbitMQ server management code" OFF)
@@ -223,11 +217,6 @@ target_link_libraries (Bayeux_rabbitmq ${BxRabbitMQ_OTHER_LIBS})
 
 # - Set RPATH as needed
 set_target_properties (Bayeux_rabbitmq PROPERTIES INSTALL_RPATH_USE_LINK_PATH 1)
-# if(UNIX AND NOT APPLE)
-#   set_target_properties(Bayeux_rabbitmq
-#     PROPERTIES INSTALL_RPATH "\$ORIGIN/../${CMAKE_INSTALL_LIBDIR}"
-#     )
-# endif()
 
 install ( FILES
   ${BxRabbitMQ_HEADERS}
