@@ -3,6 +3,8 @@
 #  BxRabbitMQ_INCLUDE_DIRS - include directories for Bayeux/RabbitMQ
 #  BxRabbitMQ_DEFINITIONS  - compile definitions needed to use Bayeux/RabbitMQ
 #  BxRabbitMQ_LIBRARIES    - libraries to link against
+#  BxRabbitMQ_WITH_MANAGER - flag
+#  BxRabbitMQ_MANAGER_LIBRARIES - libraries to link against (management)
 #
 
 #----------------------------------------------------------------------
@@ -40,11 +42,11 @@ set (BxRabbitMQ_INCLUDE_DIRS "${BxRabbitMQ_INCLUDE_DIR}" "${BxRabbitMQ_INCLUDE_D
 message (STATUS "[info] BxRabbitMQConfig: BxRabbitMQ_INCLUDE_DIRS = '${BxRabbitMQ_INCLUDE_DIRS}'")
 
 #-----------------------------------------------------------------------
-if (CMAKE_COMPILER_IS_GNUCXX)
-  set (CMAKE_CXX_FLAGS -std=c++11)
-endif ()
 set (BxRabbitMQ_DEFINITIONS -std=c++11)
 message (STATUS "[info] BxRabbitMQConfig: BxRabbitMQ_DEFINITIONS = '${BxRabbitMQ_DEFINITIONS}'")
+if (CMAKE_COMPILER_IS_GNUCXX)
+  set (CMAKE_CXX_FLAGS ${BxRabbitMQ_DEFINITIONS})
+endif ()
 
 set (BxRabbitMQ_BOOST_VERSION  @BxRabbitMQ_BOOST_VERSION@)
 set (Boost_NO_BOOST_CMAKE ON)
@@ -53,10 +55,16 @@ set (BxRabbitMQ_BOOST_INCLUDE_DIRS       @Boost_INCLUDE_DIRS@)
 set (BxRabbitMQ_RABBITC_INCLUDE_DIR      @RABBITC_INCLUDE_DIR@)
 set (BxRabbitMQ_RABBITC_LIBRARY          @RABBITC_LIBRARY@)
 
+message (STATUS "[info] BxRabbitMQConfig: Requested BxRabbitMQ_FIND_COMPONENTS = '${BxRabbitMQ_FIND_COMPONENTS}'")
+
+set (BxRabbitMQ_FIND_REQUIRED_manager 0)
+
 if (BxRabbitMQ_WITH_MANAGER)
   set (BxRabbitMQ_CURLPP_INCLUDE_DIR       @CURLPP_INCLUDE_DIR@)
-  set (BxRabbitMQ_BXJSONTOOLS_INCLUDE_DIRS @BxJsontools_INCLUDE_DIRS@)
   set (BxRabbitMQ_CURLPP_LIBRARY           @CURLPP_LIBRARY@)
+  set (BxRabbitMQ_BXJSONTOOLS_VERSION      @BxJsontools_VERSION@)
+  set (BxRabbitMQ_BXJSONTOOLS_DIR          @BxJsontools_DIR@)
+  set (BxRabbitMQ_BXJSONTOOLS_INCLUDE_DIRS @BxJsontools_INCLUDE_DIRS@)
   set (BxRabbitMQ_BXJSONTOOLS_LIBRARIES    @BxJsontools_LIBRARIES@)
 endif()
 
@@ -69,11 +77,22 @@ list (APPEND BxRabbitMQ_INCLUDE_DIRS
   ${BxRabbitMQ_RABBITC_INCLUDE_DIR}
   )
 
+list(FIND BxRabbitMQ_FIND_COMPONENTS "manager" _found_manager)
 if (BxRabbitMQ_WITH_MANAGER)
   list (APPEND BxRabbitMQ_INCLUDE_DIRS
     ${BxRabbitMQ_CURLPP_INCLUDE_DIR}
     )
+  set (BxJsontools_DIR ${BxRabbitMQ_BXJSONTOOLS_DIR})
+  message (STATUS "[info] BxRabbitMQConfig: Finding package BxJsontools...")
+  find_package(BxJsontools ${BxRabbitMQ_BXJSONTOOLS_VERSION} EXACT REQUIRED CONFIG)
+# else()
+#   message(FATAL_ERROR "[fatal] BxRabbitMQConfig: No support for BxRabbitMQ/manager!")
 endif (BxRabbitMQ_WITH_MANAGER)
+if (NOT _found_manager EQUAL -1)
+  set (BxRabbitMQ_FIND_REQUIRED_manager 1)
+endif()
+
+message (STATUS "[info] BxRabbitMQConfig: BxRabbitMQ_FIND_REQUIRED_manager = '${BxRabbitMQ_FIND_REQUIRED_manager}'")
 
 #-----------------------------------------------------------------------
 # Include the file listing all the imported targets.
@@ -90,14 +109,24 @@ set (BxRabbitMQ_LIBRARIES ${BxRabbitMQ_LIBRARY})
 list (APPEND BxRabbitMQ_LIBRARIES
   ${BxRabbitMQ_RABBITC_LIBRARY}
   )
-if (BxRabbitMQ_WITH_MANAGER)
-  list (APPEND BxRabbitMQ_LIBRARIES
-    ${BxRabbitMQ_CURLPP_LIBRARY}
-    ${BxRabbitMQ_BXJSONTOOLS_LIBRARIES}
-    )
-endif (BxRabbitMQ_WITH_MANAGER)
 
 mark_as_advanced (BxRabbitMQ_LIBRARY)
 message (STATUS "[info] BxRabbitMQConfig: BxRabbitMQ_LIBRARIES = '${BxRabbitMQ_LIBRARIES}'")
+
+if (BxRabbitMQ_WITH_MANAGER)
+
+  set (BxRabbitMQ_MANAGER_LIBRARY Bayeux_rabbitmq_manager CACHE FILE "BxRabbitMQ manager library (imported)")
+  set (BxRabbitMQ_MANAGER_LIBRARIES ${BxRabbitMQ_MANAGER_LIBRARY})
+  if (BxRabbitMQ_FIND_REQUIRED_manager)
+    list (APPEND BxRabbitMQ_MANAGER_LIBRARIES
+      ${BxRabbitMQ_CURLPP_LIBRARY}
+      ${BxRabbitMQ_BXJSONTOOLS_LIBRARIES}
+      )
+  endif (BxRabbitMQ_FIND_REQUIRED_manager)
+
+  mark_as_advanced (BxRabbitMQ_MANAGER_LIBRARY)
+  message (STATUS "[info] BxRabbitMQConfig: BxRabbitMQ_MANAGER_LIBRARIES = '${BxRabbitMQ_MANAGER_LIBRARIES}'")
+
+endif(BxRabbitMQ_WITH_MANAGER)
 
 # - end

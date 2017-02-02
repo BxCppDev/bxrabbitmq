@@ -4,7 +4,7 @@
 #include <iostream>
 
 // This project:
-#include <rabbitmq/testing/test.h>
+#include <rabbitmq/testing/test_mgr.h>
 
 int main (int argc, char** argv)
 {
@@ -15,14 +15,7 @@ int main (int argc, char** argv)
     if (argc > 1) {
        test_num = atoi (argv [1]);
     }
-
-    rabbitmq::testing::test::run_test_0 ();
-    rabbitmq::testing::test::run_test_1 (test_num);
-    rabbitmq::testing::test::run_test_2 ();
-    rabbitmq::testing::test::run_test_1 (test_num + 10);
-    rabbitmq::testing::test::run_test_2 ();
-    rabbitmq::testing::test::run_test_1 (test_num + 20);
-    rabbitmq::testing::test::run_test_3 ();
+    rabbitmq::testing::test_mgr::run_test_0 ();
 
   } catch (std::exception & x) {
     std::cerr << "ERROR: " << x.what() << std::endl;

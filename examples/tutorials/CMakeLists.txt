@@ -15,6 +15,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
 endif()
 
 # BxRabbitMQ
+message (STATUS "[info] Finding package BxRabbitMQ (without 'manager' component)...")
 find_package(BxRabbitMQ 0.1 REQUIRED CONFIG)
 message (STATUS "BxRabbitMQ_INCLUDE_DIRS ='${BxRabbitMQ_INCLUDE_DIRS}'")
 message (STATUS "BxRabbitMQ_LIBRARIES    ='${BxRabbitMQ_LIBRARIES}'")

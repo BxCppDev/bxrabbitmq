@@ -9,9 +9,6 @@
 #include <rabbitmq/connection.h>
 #include <rabbitmq/channel.h>
 #include <rabbitmq/parameters.h>
-#if BXRABBITMQ_WITH_MANAGER == 1
-#include <rabbitmq/rabbit_mgr.h>
-#endif
 
 namespace rabbitmq {
 
@@ -105,7 +102,7 @@ namespace rabbitmq {
     }
 
     // static
-    void test::run_test_3 ()     //  listen a queue during 2 sec (with callback)
+    void test::run_test_3 ()  // listen a queue during 2 sec (with callback)
     {
       std::clog << "\ntest::run_test_3: \n" ;
       connection_parameters c_par;
@@ -126,17 +123,6 @@ namespace rabbitmq {
       }
       return;
     }
-
-#if BXRABBITMQ_WITH_MANAGER == 1
-    // static
-    void test::run_test_4 ()     //  rabbit management
-    {
-      std::clog << "\ntest::run_test_4: \n" ;
-      rabbit_mgr mgr ("localhost", 15672, "guest", "guest");
-      mgr.test ();
-      return;
-    }
-#endif // BXRABBITMQ_WITH_MANAGER == 1
 
   } // end of namespace testing
 

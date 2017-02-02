@@ -57,7 +57,9 @@ else
 fi
 
 # brewsh
+# curlpp_setup
 # rabbitmqc_setup
+# bxjsontools_setup
 
 if [ -d ${install_dir} ]; then
     rm -fr ${install_dir}

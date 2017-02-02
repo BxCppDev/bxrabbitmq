@@ -37,10 +37,13 @@ bin_dir="${prefix_dir}/@CMAKE_INSTALL_BINDIR@"
 inc_dir="${prefix_dir}/@CMAKE_INSTALL_INCLUDEDIR@"
 data_dir="${prefix_dir}/@CMAKE_INSTALL_DATADIR@/BxRabbitMQ-@BxRabbitMQ_VERSION@"
 cmake_dir="${prefix_dir}/@CMAKE_INSTALL_CMAKEDIR@/BxRabbitMQ-@BxRabbitMQ_VERSION@"
+list_of_components=
 with_management=false
-if [ "x${BxRabbitMQ_WITH_MANAGER}" = "x1" ]; then
+if [ "x@BxRabbitMQ_WITH_MANAGER@" = "x1" ]; then
     with_management=true
+    list_of_components="manager"
 fi
+
 
 function print_usage()
 {
@@ -67,6 +70,8 @@ Options:
   --cmakedir             Print CMake config directory.
 
   --with-management      Print is management code is built.
+
+  --list-of-components   Print the list of supported components.
 
 EOF
     return
@@ -100,6 +105,9 @@ while [ -n "$?" ]; do
 	  elif [ "${option}" = "--cmakedir" ]; then
 	      echo ${cmake_dir}
 	      exit 0
+	  elif [ "${option}" = "--list-of-components" ]; then
+	      echo ${list_of_components}
+	      exit 0
 	  elif [ "${option}" = "--with-management" ]; then
 	      echo ${with_management}
 	      exit 0
@@ -117,3 +125,5 @@ while [ -n "$?" ]; do
 done
 
 exit 0
+
+# end
