@@ -16,7 +16,7 @@ install_dir=$(pwd)/_install.d
 build_dir=$(pwd)/_build.d
 
 devel=false
-bxjsontools_prefix=
+bxjsontools_prefix=$(bxjsontools-query --prefix)
 with_management=false
 
 while [ -n "$1" ]; do

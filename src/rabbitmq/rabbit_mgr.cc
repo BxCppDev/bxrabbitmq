@@ -38,15 +38,14 @@ namespace rabbitmq {
 
       curlpp::Cleanup        cleaner;
       curlpp::Easy           request;
-      std::string            url  = "http://" + _server_host_ + ":" + std::to_string (_server_port_) + "/api/vhosts";
+      std::string            url  = "https://" + _server_host_ + ":" + std::to_string (_server_port_) + "/api/vhosts";
       std::string            upwd = _user_login_ + ":" + _user_passwd_;
       std::ostringstream     oss;
       std::string            response;
-      //std::list<std::string> header;
-      //header.push_back ("Content-Type: application/octet-stream");
-      //request.setOpt   (new curlpp::options::HttpHeader (header));
-      //request.setOpt   (new curlpp::options::Verbose (true));
-      request.setOpt   (new curlpp::options::Url     (url));
+      request.setOpt   (new curlpp::options::Url (url));
+      request.setOpt   (new curlpp::options::SslEngineDefault ());
+      request.setOpt   (new curlpp::options::SslVerifyPeer (false));
+      request.setOpt   (new curlpp::options::SslVerifyHost (0));
       request.setOpt   (new curlpp::options::UserPwd (upwd));
 
       //request.perform  ();
