@@ -13,6 +13,7 @@
 // pimpl rabbitmq-c:
 #include <amqp.h>
 #include <amqp_tcp_socket.h>
+#include <amqp_ssl_socket.h>
 
 
 namespace rabbitmq {
@@ -335,15 +336,26 @@ namespace rabbitmq {
       int              err;
       struct timeval   tv;
       struct timeval*  ptv = &tv;
+      bool             tls = (params_.port == 5671);
       amqp_rpc_reply_t reply;
 
-      ptv->tv_sec  = 5;  // timeout 5 sec
-      ptv->tv_usec = 0;
-      _amqp_ch_    = num_;
-      _amqp_con_   = amqp_new_connection ();
-      _amqp_soc_   = amqp_tcp_socket_new (_amqp_con_);
+      ptv->tv_sec   = 5;  // timeout 5 sec
+      ptv->tv_usec  = 0;
+      _amqp_ch_     = num_;
+      _amqp_con_    = amqp_new_connection ();
+      if (tls) {
+          //  std::clog << "trying ssl socket ... " << params_.port << std::endl;
+         _amqp_soc_ = amqp_ssl_socket_new (_amqp_con_);
+      } else {
+         //  std::clog << "trying tcp socket ... " << params_.port << std::endl;
+         _amqp_soc_ = amqp_tcp_socket_new (_amqp_con_);
+      }
       if (!_amqp_soc_) {
          throw ::rabbitmq::exception ("Unable to create TCP socket");
+      }
+      if (tls) {
+         amqp_ssl_socket_set_verify_peer     (_amqp_soc_, 0);
+         amqp_ssl_socket_set_verify_hostname (_amqp_soc_, 0);
       }
       err = amqp_socket_open_noblock (_amqp_soc_, params_.host.c_str (), params_.port, ptv);
       if (err != AMQP_STATUS_OK) {

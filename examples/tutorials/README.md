@@ -1,17 +1,12 @@
 # bxrabbitmq tutorials
+
 https://www.rabbitmq.com/getstarted.html
 
-## Build example on Linux
+## Required libraries
 
-#
-#  Required libraries : RabbitC & BxRabbitMQ
-#
-#  add PATH to BxRabbitMQ install bin dir (to find bxrabbitmq-query)
-#  => export PATH=$PATH:/path/to/bxrabbitmq/install/dir/bin
-#
-#  add PKG_CONFIG_PATH to RabbitC defs
-#  => export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/path/to/rabbitc/install/dir/lib/../pkgconfig
-#
+   BxRabbitMQ installed
+
+## Build on Linux
 
 ```sh
 $ mkdir -p /tmp/${USER}/bxrabbitmq/tutorials/_build.d

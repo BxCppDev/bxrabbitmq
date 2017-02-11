@@ -1,25 +1,20 @@
-# bxrabbitmq rabbit_management
-# https://www.rabbitmq.com/getstarted.html webapi
+# Rabbit server management
 
-## Build example on Linux
+  https://www.rabbitmq.com/getstarted.html
 
-#
-#  Required libraries : RabbitC & BxRabbitMQ & BxJsontools
-#
-#  add PATH to BxRabbitMQ install bin dir (to find bxrabbitmq-query)
-#  => export PATH=$PATH:/path/to/bxrabbitmq/install/dir/bin
-#
-#  add PKG_CONFIG_PATH to RabbitC defs
-#  => export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/path/to/rabbitc/install/dir/lib/../pkgconfig
-#
+
+## Required libraries
+
+   BxRabbitMQ installed with cmake option ``-DBXRABBITMQ_WITH_MANAGER=ON``
+
+## Build on Linux:
 
 ```sh
 $ mkdir -p /tmp/${USER}/bxrabbitmq/management/_build.d
 $ cd /tmp/${USER}/bxrabbitmq/management/_build.d
 $ cmake \
   -DCMAKE_INSTALL_PREFIX=../_install.d \
-  -DCMAKE_FIND_ROOT_PATH="${bxjsontools-query --prefix}" \
-  -DBxJsontools_DIR="${bxjsontools-query --cmakedir}"    \
+  -DBxRabbitMQ_DIR="${bxrabbitmq-query --cmakedir}"    \
   $(bxrabbitmq-query --prefix)/share/BxRabbitMQ-$(bxrabbitmq-query --version)/examples/management
 $ make
 $ make install
