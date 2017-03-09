@@ -93,10 +93,12 @@ set(BxRabbitMQ_SOURCES
 
 set(BxRabbitMQ_MANAGER_HEADERS
   src/rabbitmq/rabbit_mgr.h
+  src/rabbitmq/management.h
   )
 
 set(BxRabbitMQ_MANAGER_SOURCES
   src/rabbitmq/rabbit_mgr.cc
+  src/rabbitmq/management.cc
   )
 
 set(BxRabbitMQ_OTHER_LIBS)
