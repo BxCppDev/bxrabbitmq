@@ -24,12 +24,12 @@ namespace rabbitmq {
    /***  local  ************************************************************/
 
    template <typename T>
-   bool _request_perform_     (curlpp::Easy      & request_,
-                               T                 & response_,
-                               error_response    & error_);
+   bool _request_perform_   (curlpp::Easy      & request_,
+                             T                 & response_,
+                             error_response    & error_);
 
-   bool _request_perform_     (curlpp::Easy      & request_,
-                               error_response    & error_);
+   bool _request_perform_   (curlpp::Easy      & request_,
+                             error_response    & error_);
 
    std::string _vhost_name_ (const std::string & vhost_code_);
 
@@ -52,13 +52,15 @@ namespace rabbitmq {
       return;
    }
 
+
    rabbit_mgr::~rabbit_mgr ()
    {
       return;
    }
 
-   bool rabbit_mgr::get_vhosts (vhost::list    & vhosts_,
-                                error_response & error_)
+
+   bool rabbit_mgr::list_vhosts (vhost::list    & vhosts_,
+                                 error_response & error_)
    {
       curlpp::Cleanup cleaner;
       curlpp::Easy    request;
@@ -66,14 +68,16 @@ namespace rabbitmq {
       return _request_perform_<vhost::list> (request, vhosts_, error_);
    }
 
-   bool rabbit_mgr::create_vhost (const std::string & name_,
-                                  error_response    & error_)
+
+   bool rabbit_mgr::add_vhost (const std::string & name_,
+                               error_response    & error_)
    {
       curlpp::Cleanup cleaner;
       curlpp::Easy    request;
       _request_setBaseOpts_ (request, "vhosts/" + _vhost_code_ (name_), "PUT", true);
       return _request_perform_ (request, error_);
    }
+
 
    bool rabbit_mgr::delete_vhost (const std::string & name_,
                                   error_response    & error_)
@@ -84,9 +88,10 @@ namespace rabbitmq {
       return _request_perform_ (request, error_);
    }
 
-   bool rabbit_mgr::get_exchanges (const std::string & vhost_name_,
-                                   exchange::list    & exchanges_,
-                                   error_response    & error_)
+
+   bool rabbit_mgr::list_exchanges (const std::string & vhost_name_,
+                                    exchange::list    & exchanges_,
+                                    error_response    & error_)
    {
       curlpp::Cleanup        cleaner;
       curlpp::Easy           request;
@@ -94,13 +99,14 @@ namespace rabbitmq {
       return _request_perform_<exchange::list> (request, exchanges_, error_);
    }
 
-   bool rabbit_mgr::create_exchange (const std::string & name_,
-                                     const std::string & vhost_,
-                                     const std::string & type_,
-                                     const bool          durable_,
-                                     const bool          auto_delete_,
-                                     const bool          internal_,
-                                     error_response    & error_)
+
+   bool rabbit_mgr::exchange_declare (const std::string & name_,
+                                      const std::string & vhost_,
+                                      const std::string & type_,
+                                      const bool          durable_,
+                                      const bool          auto_delete_,
+                                      const bool          internal_,
+                                      error_response    & error_)
    {
       curlpp::Cleanup cleaner;
       curlpp::Easy    request;
@@ -119,6 +125,7 @@ namespace rabbitmq {
       return _request_perform_ (request, error_);
    }
 
+
    bool rabbit_mgr::delete_exchange (const std::string & name_,
                                      const std::string & vhost_,
                                      error_response    & error_)
@@ -129,7 +136,89 @@ namespace rabbitmq {
       return _request_perform_ (request, error_);
    }
 
-   /**************************************************************************************/
+
+   bool rabbit_mgr::list_queues (const std::string & vhost_name_,
+                                    queue::list    & queues_,
+                                    error_response    & error_)
+   {
+      curlpp::Cleanup        cleaner;
+      curlpp::Easy           request;
+      _request_setBaseOpts_ (request, "queues/" + _vhost_code_ (vhost_name_));
+      return _request_perform_<queue::list> (request, queues_, error_);
+   }
+
+
+   bool rabbit_mgr::queue_declare (const std::string & name_,
+                                   const std::string & vhost_,
+                                   const bool          durable_,
+                                   const bool          auto_delete_,
+                                   error_response    & error_)
+   {
+      curlpp::Cleanup cleaner;
+      curlpp::Easy    request;
+      std::string     options;
+      options = options + "{";
+      options = options + "\"durable\""     + ": " + _to_string_ (durable_);
+      options = options + ", ";
+      options = options + "\"auto_delete\"" + ": " + _to_string_ (auto_delete_);
+      options = options + "}";
+      _request_setBaseOpts_ (request, "queues/" + _vhost_code_ (vhost_) + "/" + name_, "PUT", true);
+      request.setOpt (new curlpp::options::PostFields (options));
+      return _request_perform_ (request, error_);
+   }
+
+
+   bool rabbit_mgr::delete_queue (const std::string & name_,
+                                  const std::string & vhost_,
+                                  error_response    & error_)
+   {
+      curlpp::Cleanup cleaner;
+      curlpp::Easy    request;
+      _request_setBaseOpts_ (request, "queues/" + _vhost_code_ (vhost_) + "/" + name_, "DELETE", true);
+      return _request_perform_ (request, error_);
+   }
+
+
+   bool rabbit_mgr::list_users (user::list     & users_,
+                                error_response & error_)
+   {
+      curlpp::Cleanup cleaner;
+      curlpp::Easy    request;
+      _request_setBaseOpts_  (request, "users");
+      return _request_perform_<user::list> (request, users_, error_);
+   }
+
+
+   bool rabbit_mgr::add_user (const std::string & name_,
+                              const std::string & passwd_,
+                              error_response    & error_)
+   {
+      curlpp::Cleanup cleaner;
+      curlpp::Easy    request;
+      std::string     options;
+      options = options + "{";
+      options = options + "\"password\"" + ": " + "\"" + passwd_ + "\"";
+      options = options + ", ";
+      options = options + "\"tags\""     + ": " + "\"" +           "\"";   //  TODO tags ...
+      options = options + "}";
+      _request_setBaseOpts_ (request, "users/" + name_, "PUT", true);
+      request.setOpt (new curlpp::options::PostFields (options));
+      return _request_perform_ (request, error_);
+   }
+
+
+   bool rabbit_mgr::delete_user (const std::string & name_,
+                                 error_response    & error_)
+   {
+      curlpp::Cleanup cleaner;
+      curlpp::Easy    request;
+      _request_setBaseOpts_ (request, "users/" + name_, "DELETE", true);
+      return _request_perform_ (request, error_);
+   }
+
+
+   /***  private  ************************************************************************/
+
 
    void rabbit_mgr::_request_setBaseOpts_ (curlpp::Easy      & request_,
                                            const std::string & cmd_,
@@ -150,7 +239,7 @@ namespace rabbitmq {
          request_.setOpt (new curlpp::options::SslVerifyPeer (false));
          request_.setOpt (new curlpp::options::SslVerifyHost (0));
       }
-      if (custom_ != "POST") {
+      if (custom_ != "GET") {
          request_.setOpt (new curlpp::options::CustomRequest (custom_));
       }
       if (appli_) {
@@ -161,53 +250,71 @@ namespace rabbitmq {
       }
    }
 
+
    /***  local  ***************************************************************************/
 
+
    template <typename T>
-   bool _request_perform_ (curlpp::Easy      & request_,
-                           T                 & response_,
-                           error_response    & error_)
+   bool _request_perform_ (curlpp::Easy   & request_,
+                           T              & response_,
+                           error_response & error_)
    {
-      std::stringstream ss;
-      std::string       str_response;
+      std::string str_response;
       try {
+         std::stringstream ss;
          ss << request_;
-         str_response = ss.str ();
          str_response = ss.str ();
          error_       = error_response::response_ok ();
       } catch (std::exception & x) {
          std::cerr << "ERROR: " << x.what() << std::endl;
-         error_.what = x.what ();
-         error_.why  = "_request_perform_ <T>";
+         error_.error  = x.what ();
+         error_.reason = "_request_perform_ <T>";
          return false;
       }
       try {
-         ss << str_response;
+         std::stringstream ss (str_response);
          jsontools::load (ss, response_);
          return true;
       } catch (...) {
-         ss << str_response;
+         //std::clog << "\n== ERROR RESPONSE ==> " << str_response << std::endl;
+         std::stringstream ss (str_response);
          jsontools::load (ss, error_);
          return false;
       }
    }
 
-   bool _request_perform_ (curlpp::Easy      & request_,
-                           error_response    & error_)
+
+   bool _request_perform_ (curlpp::Easy   & request_,
+                           error_response & error_)
    {
       std::stringstream ss;
       std::string       str_response;
+      std::string       line;
+      size_t            pos;
+      size_t            jsize = 0;
       try {
          ss << request_;
          str_response = ss.str ();
          error_       = error_response::response_ok ();
+         while (std::getline (ss, line)) {
+            pos = line.find ("Content-Length:");
+            if (pos != std::string::npos) {
+               jsize = std::stoi (line.substr (pos+15));
+               break;
+            }
+         }
+         if (jsize != 0) {
+            jsontools::load (ss, error_);
+            return false;
+         }
       } catch (std::exception & x) {
          std::cerr << "ERROR: " << x.what() << std::endl;
-         error_.what = x.what ();
-         error_.why  = "_request_perform_";
+         error_.error  = x.what ();
+         error_.reason = "_request_perform_";
          return false;
       }
    }
+
 
    std::string _vhost_name_ (const std::string & vhost_code_)
    {
@@ -228,6 +335,7 @@ namespace rabbitmq {
       }
       return code;
    }
+
 
    std::string _to_string_ (const bool b)
    {

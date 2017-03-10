@@ -24,8 +24,8 @@ namespace rabbitmq {
 
       virtual void jsonize (jsontools::node & node_,
                             const unsigned long int version_ = 0);
-      std::string what;
-      std::string why;
+      std::string error;
+      std::string reason;
    };
 
 
@@ -69,6 +69,40 @@ namespace rabbitmq {
       bool        durable     = true;
       bool        auto_delete = false;
       bool        internal    = false;
+   };
+
+
+   /// \brief queue
+   struct queue : public jsontools::i_jsonizable
+   {
+      typedef std::list <queue> list;
+
+      queue ();
+      queue (const std::string & name_,
+             const std::string & vhost_);
+      virtual ~queue ();
+
+      virtual void jsonize (jsontools::node & node_,
+                            const unsigned long int version_ = 0);
+
+      std::string name;
+      std::string vhost;
+      bool        durable     = true;
+      bool        auto_delete = false;
+   };
+
+
+   /// \brief user
+   struct user : public jsontools::i_jsonizable
+   {
+      typedef std::list <user> list;
+
+      virtual void jsonize (jsontools::node & node_,
+                            const unsigned long int version_ = 0);
+
+      std::string name;
+      std::string password_hash;
+      std::string tags;
    };
 
 

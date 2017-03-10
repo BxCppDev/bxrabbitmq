@@ -18,14 +18,14 @@ int main ()
    rabbitmq::vhost::list    vhosts;
    rabbitmq::rabbit_mgr     mgr ("localhost", 15672, "guest", "guest");
 
-   ok = mgr.get_vhosts (vhosts, error);
+   ok = mgr.list_vhosts (vhosts, error);
    if (ok) {
       std::clog << "vhosts list : " << std::endl;
       for (rabbitmq::vhost::list::iterator iter = vhosts.begin(); iter != vhosts.end(); iter++) {
          std::clog << (*iter).name << std::endl;
       }
    } else {
-      std::cerr << "vhosts list error : " << error.what << "  " << error.why << std::endl;
+      std::cerr << "vhosts list error : " << error.error << "  " << error.reason << std::endl;
    }
    return 0;
 }

@@ -36,16 +36,16 @@ namespace rabbitmq {
 
   error_response::error_response ()
   {
-    this->what = no_error ();
-    this->why  = no_problem ();
+    this->error  = no_error ();
+    this->reason = no_problem ();
     return;
   }
 
   void error_response::jsonize (jsontools::node & node_,
                                 const unsigned long int /* version_ */)
   {
-    node_ ["what"] % what;
-    node_ ["why"]  % why;
+    node_ ["error"]  % error;
+    node_ ["reason"] % reason;
     return;
   }
 
@@ -107,6 +107,47 @@ namespace rabbitmq {
     node_ ["durable"]     % durable;
     node_ ["auto_delete"] % auto_delete;
     node_ ["internal"]    % internal;
+    return;
+  }
+
+
+  /***  QUEUE  **************************************************************/
+
+  queue::queue ()
+  {
+    return;
+  }
+
+  queue::queue (const std::string & name_,
+                const std::string & vhost_)
+    : name (name_), vhost (vhost_)
+  {
+    return;
+  }
+
+  queue::~queue ()
+  {
+  }
+
+  void queue::jsonize (jsontools::node &   node_,
+                       const unsigned long int /* version_ */)
+  {
+    node_ ["name"]        % name;
+    node_ ["vhost"]       % vhost;
+    node_ ["durable"]     % durable;
+    node_ ["auto_delete"] % auto_delete;
+    return;
+  }
+
+
+  /***  USER  ****************************************************************/
+
+  void user::jsonize (jsontools::node &   node_,
+                      const unsigned long int /* version_ */)
+  {
+    node_ ["name"]          % name;
+    node_ ["password_hash"] % password_hash;
+    node_ ["tags"]          % tags;
     return;
   }
 

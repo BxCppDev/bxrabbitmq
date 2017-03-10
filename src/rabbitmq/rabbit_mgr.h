@@ -30,31 +30,57 @@ namespace rabbitmq {
         //
 
         //  VHOSTS
-        bool get_vhosts    (vhost::list       & vhosts_,
+        bool list_vhosts   (vhost::list       & vhosts_,
                             error_response    & error_);
 
-        bool create_vhost  (const std::string & name_,
+        bool add_vhost     (const std::string & name_,
                             error_response    & error_);
 
         bool delete_vhost  (const std::string & name_,
                             error_response    & error_);
 
         //  EXCHANGES
-        bool get_exchanges   (const std::string & vhost_,
-                              exchange::list    & exchanges_,
-                              error_response    & error_);
+        bool list_exchanges   (const std::string & vhost_,
+                               exchange::list    & exchanges_,
+                               error_response    & error_);
 
-        bool create_exchange (const std::string & name_,
-                              const std::string & vhost_,
-                              const std::string & type_,
-                              const bool          durable_,
-                              const bool          auto_delete_,
-                              const bool          internal_,
-                              error_response    & error_);
+        bool exchange_declare (const std::string & name_,
+                               const std::string & vhost_,
+                               const std::string & type_,
+                               const bool          durable_,
+                               const bool          auto_delete_,
+                               const bool          internal_,
+                               error_response    & error_);
 
-        bool delete_exchange (const std::string & name_,
-                              const std::string & vhost_,
-                              error_response    & error_);
+        bool delete_exchange  (const std::string & name_,
+                               const std::string & vhost_,
+                               error_response    & error_);
+
+        //  QUEUES
+        bool list_queues   (const std::string & vhost_,
+                            queue::list       & queues_,
+                            error_response    & error_);
+
+        bool queue_declare (const std::string & name_,
+                            const std::string & vhost_,
+                            const bool          durable_,
+                            const bool          auto_delete_,
+                            error_response    & error_);
+
+        bool delete_queue  (const std::string & name_,
+                            const std::string & vhost_,
+                            error_response    & error_);
+
+        //  USERS
+        bool list_users   (user::list        & users_,
+                           error_response    & error_);
+
+        bool add_user     (const std::string & name_,
+                           const std::string & passwd_,
+                           error_response    & error_);
+
+        bool delete_user  (const std::string & name_,
+                           error_response    & error_);
 
      private:
         std::string  _server_host_;
@@ -65,7 +91,7 @@ namespace rabbitmq {
      private:
         void _request_setBaseOpts_ (curlpp::Easy      & request_,
                                     const std::string & cmd_,
-                                    const std::string & custom_ = "POST",
+                                    const std::string & custom_ = "GET",
                                     const bool          appli_  = false);
 
 
