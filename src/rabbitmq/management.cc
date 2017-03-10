@@ -52,51 +52,16 @@ namespace rabbitmq {
 
   /***  VHOST  **************************************************************/
 
-  vhost::vhost ()
-  {
-    return;
-  }
-
-  vhost::vhost (const std::string & name_)
-    : name (name_)
-  {
-    return;
-  }
-
-  vhost::~vhost ()
-  {
-  }
-
   void vhost::jsonize (jsontools::node & node_,
                        const unsigned long int /* version_ */)
   {
     node_ ["name"]                   % name;
     node_ ["tracing"]                % tracing;
-//    node_ ["messages"]               % messages;
-//    node_ ["messages_ready"]         % messages_ready;
-//    node_ ["messages_unaknowledged"] % messages_unaknowledged;
     return;
   }
 
 
   /***  EXCHANGE  **********************************************************/
-
-  exchange::exchange ()
-  {
-    return;
-  }
-
-  exchange::exchange (const std::string & name_,
-                      const std::string & vhost_,
-                      const std::string & type_)
-    : name (name_), vhost (vhost_), type (type_)
-  {
-    return;
-  }
-
-  exchange::~exchange ()
-  {
-  }
 
   void exchange::jsonize (jsontools::node &   node_,
                           const unsigned long int /* version_ */)
@@ -112,22 +77,6 @@ namespace rabbitmq {
 
 
   /***  QUEUE  **************************************************************/
-
-  queue::queue ()
-  {
-    return;
-  }
-
-  queue::queue (const std::string & name_,
-                const std::string & vhost_)
-    : name (name_), vhost (vhost_)
-  {
-    return;
-  }
-
-  queue::~queue ()
-  {
-  }
 
   void queue::jsonize (jsontools::node &   node_,
                        const unsigned long int /* version_ */)
@@ -146,8 +95,21 @@ namespace rabbitmq {
                       const unsigned long int /* version_ */)
   {
     node_ ["name"]          % name;
-    node_ ["password_hash"] % password_hash;
     node_ ["tags"]          % tags;
+    return;
+  }
+
+
+  /***  PERMISSION  **********************************************************/
+
+  void permission::jsonize (jsontools::node &   node_,
+                            const unsigned long int /* version_ */)
+  {
+    node_ ["user"]      % user;
+    node_ ["vhost"]     % vhost;
+    node_ ["configure"] % configure;
+    node_ ["write"]     % write;
+    node_ ["read"]      % read;
     return;
   }
 

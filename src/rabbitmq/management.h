@@ -5,7 +5,6 @@
 
 // Standard library:
 #include <string>
-//#include <boost/optional.hpp>
 
 // Bayeux/jsontools:
 #include "jsontools/i_jsonizable.h"
@@ -34,18 +33,11 @@ namespace rabbitmq {
    {
       typedef std::list <vhost> list;
 
-      vhost ();
-      vhost (const std::string & name_);
-      virtual ~vhost ();
-
       virtual void jsonize (jsontools::node & node_,
                             const unsigned long int version_ = 0);
 
       std::string                name;
       bool                       tracing = false;
-      //boost::optional <uint32_t> messages;
-      //boost::optional <uint32_t> messages_ready;
-      //boost::optional <uint32_t> messages_unaknowledged;
    };
 
 
@@ -53,12 +45,6 @@ namespace rabbitmq {
    struct exchange : public jsontools::i_jsonizable
    {
       typedef std::list <exchange> list;
-
-      exchange ();
-      exchange (const std::string & name_,
-                const std::string & vhost_,
-                const std::string & type_);
-      virtual ~exchange ();
 
       virtual void jsonize (jsontools::node & node_,
                             const unsigned long int version_ = 0);
@@ -76,11 +62,6 @@ namespace rabbitmq {
    struct queue : public jsontools::i_jsonizable
    {
       typedef std::list <queue> list;
-
-      queue ();
-      queue (const std::string & name_,
-             const std::string & vhost_);
-      virtual ~queue ();
 
       virtual void jsonize (jsontools::node & node_,
                             const unsigned long int version_ = 0);
@@ -101,8 +82,23 @@ namespace rabbitmq {
                             const unsigned long int version_ = 0);
 
       std::string name;
-      std::string password_hash;
       std::string tags;
+   };
+
+
+   /// \brief permission
+   struct permission : public jsontools::i_jsonizable
+   {
+      typedef std::list <permission> list;
+
+      virtual void jsonize (jsontools::node & node_,
+                            const unsigned long int version_ = 0);
+
+      std::string user;
+      std::string vhost;
+      std::string configure;
+      std::string write;
+      std::string read;
    };
 
 

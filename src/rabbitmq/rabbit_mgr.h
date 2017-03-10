@@ -72,15 +72,25 @@ namespace rabbitmq {
                             error_response    & error_);
 
         //  USERS
-        bool list_users   (user::list        & users_,
-                           error_response    & error_);
+        bool list_users       (user::list        & users_,
+                               error_response    & error_);
 
-        bool add_user     (const std::string & name_,
-                           const std::string & passwd_,
-                           error_response    & error_);
+        bool add_user         (const std::string & name_,
+                               const std::string & passwd_,
+                               error_response    & error_);
 
-        bool delete_user  (const std::string & name_,
-                           error_response    & error_);
+        bool delete_user      (const std::string & name_,
+                               error_response    & error_);
+
+        //  USER PERMISSIONS
+        bool user_permissions (const std::string & username_,
+                               permission::list  & permissions_,
+                               error_response    & error_);
+
+        bool user_permission  (const std::string & username_,
+                               const std::string & vhost_,
+                               permission        & permission_,
+                               error_response    & error_);
 
      private:
         std::string  _server_host_;

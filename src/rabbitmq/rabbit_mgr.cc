@@ -23,12 +23,15 @@ namespace rabbitmq {
 
    /***  local  ************************************************************/
 
+   bool _request_test_      (curlpp::Easy      & request_,
+                             std::string       & response_);
+
+   bool _request_perform_   (curlpp::Easy      & request_,
+                             error_response    & error_);
+
    template <typename T>
    bool _request_perform_   (curlpp::Easy      & request_,
                              T                 & response_,
-                             error_response    & error_);
-
-   bool _request_perform_   (curlpp::Easy      & request_,
                              error_response    & error_);
 
    std::string _vhost_name_ (const std::string & vhost_code_);
@@ -217,6 +220,29 @@ namespace rabbitmq {
    }
 
 
+   bool rabbit_mgr::user_permissions (const std::string & username_,
+                                      permission::list  & permissions_,
+                                      error_response    & error_)
+   {
+      curlpp::Cleanup cleaner;
+      curlpp::Easy    request;
+      _request_setBaseOpts_ (request, "users/" + username_ + "/permissions");
+      return _request_perform_<permission::list> (request, permissions_, error_);
+   }
+
+
+   bool rabbit_mgr::user_permission (const std::string & username_,
+                                     const std::string & vhost_,
+                                     permission        & permission_,
+                                     error_response    & error_)
+   {
+      curlpp::Cleanup cleaner;
+      curlpp::Easy    request;
+      _request_setBaseOpts_ (request, "permissions/" + _vhost_code_ (vhost_) + "/" + username_);
+      return _request_perform_<permission> (request, permission_, error_);
+   }
+
+
    /***  private  ************************************************************************/
 
 
@@ -253,6 +279,52 @@ namespace rabbitmq {
 
    /***  local  ***************************************************************************/
 
+   bool _request_test_ (curlpp::Easy & request_,
+                        std::string  & response_)
+   {
+      std::stringstream ss;
+      try {
+         ss << request_;
+         response_ = ss.str ();
+         return true;
+      } catch (std::exception & x) {
+         response_ = x.what ();
+         return false;
+      }
+   }
+
+
+   bool _request_perform_ (curlpp::Easy   & request_,
+                           error_response & error_)
+   {
+      std::stringstream ss;
+      std::string       str_response;
+      std::string       line;
+      size_t            pos;
+      size_t            jsize = 0;
+      try {
+         ss << request_;
+         str_response = ss.str ();
+         while (std::getline (ss, line)) {
+            pos = line.find ("Content-Length:");
+            if (pos != std::string::npos) {
+               jsize = std::stoi (line.substr (pos+15));
+               break;
+            }
+         }
+         if (jsize != 0) {
+            jsontools::load (ss, error_);
+            return false;
+         }
+         error_  = error_response::response_ok ();
+         return true;
+      } catch (std::exception & x) {
+         error_.error  = x.what ();
+         error_.reason = "_request_perform_";
+         return false;
+      }
+   }
+
 
    template <typename T>
    bool _request_perform_ (curlpp::Easy   & request_,
@@ -279,38 +351,6 @@ namespace rabbitmq {
          //std::clog << "\n== ERROR RESPONSE ==> " << str_response << std::endl;
          std::stringstream ss (str_response);
          jsontools::load (ss, error_);
-         return false;
-      }
-   }
-
-
-   bool _request_perform_ (curlpp::Easy   & request_,
-                           error_response & error_)
-   {
-      std::stringstream ss;
-      std::string       str_response;
-      std::string       line;
-      size_t            pos;
-      size_t            jsize = 0;
-      try {
-         ss << request_;
-         str_response = ss.str ();
-         error_       = error_response::response_ok ();
-         while (std::getline (ss, line)) {
-            pos = line.find ("Content-Length:");
-            if (pos != std::string::npos) {
-               jsize = std::stoi (line.substr (pos+15));
-               break;
-            }
-         }
-         if (jsize != 0) {
-            jsontools::load (ss, error_);
-            return false;
-         }
-      } catch (std::exception & x) {
-         std::cerr << "ERROR: " << x.what() << std::endl;
-         error_.error  = x.what ();
-         error_.reason = "_request_perform_";
          return false;
       }
    }
