@@ -84,13 +84,22 @@ namespace rabbitmq {
 
         //  USER PERMISSIONS
         bool user_permissions (const std::string & username_,
-                               permission::list  & permissions_,
+                               permissions::list & permissions_,
                                error_response    & error_);
 
-        bool user_permission  (const std::string & username_,
+        bool user_permissions (const std::string & username_,
                                const std::string & vhost_,
-                               permission        & permission_,
+                               permissions       & permissions_,
                                error_response    & error_);
+
+        bool set_permissions  (const std::string & username_,
+                               const std::string & vhost_,
+                               const std::string & configure_,
+                               const std::string & write_,
+                               const std::string & read_,
+                               error_response    & error_);
+
+        // TODO set_perm & bindings
 
      private:
         std::string  _server_host_;

@@ -77,8 +77,12 @@ namespace rabbitmq {
    {
       curlpp::Cleanup cleaner;
       curlpp::Easy    request;
+      bool            ok;
+      error_response  err;
       _request_setBaseOpts_ (request, "vhosts/" + _vhost_code_ (name_), "PUT", true);
-      return _request_perform_ (request, error_);
+      ok = _request_perform_ (request, error_);
+      if (ok) set_permissions (_user_login_, name_, ".*", ".*", ".*", err);
+      return ok;
    }
 
 
@@ -221,25 +225,47 @@ namespace rabbitmq {
 
 
    bool rabbit_mgr::user_permissions (const std::string & username_,
-                                      permission::list  & permissions_,
+                                      permissions::list & permissions_,
                                       error_response    & error_)
    {
       curlpp::Cleanup cleaner;
       curlpp::Easy    request;
       _request_setBaseOpts_ (request, "users/" + username_ + "/permissions");
-      return _request_perform_<permission::list> (request, permissions_, error_);
+      return _request_perform_<permissions::list> (request, permissions_, error_);
    }
 
 
-   bool rabbit_mgr::user_permission (const std::string & username_,
-                                     const std::string & vhost_,
-                                     permission        & permission_,
-                                     error_response    & error_)
+   bool rabbit_mgr::user_permissions (const std::string & username_,
+                                      const std::string & vhost_,
+                                      permissions       & permissions_,
+                                      error_response    & error_)
    {
       curlpp::Cleanup cleaner;
       curlpp::Easy    request;
       _request_setBaseOpts_ (request, "permissions/" + _vhost_code_ (vhost_) + "/" + username_);
-      return _request_perform_<permission> (request, permission_, error_);
+      return _request_perform_<permissions> (request, permissions_, error_);
+   }
+
+   bool rabbit_mgr::set_permissions (const std::string & username_,
+                                     const std::string & vhost_,
+                                     const std::string & configure_,
+                                     const std::string & write_,
+                                     const std::string & read_,
+                                     error_response    & error_)
+   {
+      curlpp::Cleanup cleaner;
+      curlpp::Easy    request;
+      std::string     options;
+      options = options + "{";
+      options = options + "\"configure\"" + ": " + "\"" + configure_ + "\"";
+      options = options + ", ";
+      options = options + "\"write\""     + ": " + "\"" + write_     + "\"";
+      options = options + ", ";
+      options = options + "\"read\""      + ": " + "\"" + read_      + "\"";
+      options = options + "}";
+      _request_setBaseOpts_ (request, "permissions/" + _vhost_code_ (vhost_) + "/" + username_, "PUT", true);
+      request.setOpt (new curlpp::options::PostFields (options));
+      return _request_perform_ (request, error_);
    }
 
 

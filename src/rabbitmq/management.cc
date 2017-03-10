@@ -102,8 +102,8 @@ namespace rabbitmq {
 
   /***  PERMISSION  **********************************************************/
 
-  void permission::jsonize (jsontools::node &   node_,
-                            const unsigned long int /* version_ */)
+  void permissions::jsonize (jsontools::node &   node_,
+                             const unsigned long int /* version_ */)
   {
     node_ ["user"]      % user;
     node_ ["vhost"]     % vhost;

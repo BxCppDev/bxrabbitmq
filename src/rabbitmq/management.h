@@ -87,9 +87,9 @@ namespace rabbitmq {
 
 
    /// \brief permission
-   struct permission : public jsontools::i_jsonizable
+   struct permissions : public jsontools::i_jsonizable
    {
-      typedef std::list <permission> list;
+      typedef std::list <permissions> list;
 
       virtual void jsonize (jsontools::node & node_,
                             const unsigned long int version_ = 0);
