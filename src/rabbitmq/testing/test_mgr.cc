@@ -229,6 +229,15 @@ namespace rabbitmq {
          std::cerr << " Error : " << error.error << "  " << error.reason << std::endl;
       }
 
+      std::clog << "\n== TEST ==" << std::endl;
+      std::string tst;
+      ok = mgr.test (tst);
+      if (ok) {
+         std::clog << "TEST : " << tst << std::endl;
+      } else {
+         std::cerr << "TEST Error : " << tst << std::endl;
+      }
+
       return;
     }
 

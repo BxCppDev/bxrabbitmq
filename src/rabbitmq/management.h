@@ -5,6 +5,7 @@
 
 // Standard library:
 #include <string>
+#include <list>
 
 // Bayeux/jsontools:
 #include "jsontools/i_jsonizable.h"
@@ -105,4 +106,4 @@ namespace rabbitmq {
 
 } // end of namespace rabbitmq
 
-#endif // BXRABBITMQ_RABBIT_MGR_H
+#endif // BXRABBITMQ_MANAGEMENT_H

@@ -62,6 +62,15 @@ namespace rabbitmq {
    }
 
 
+   bool rabbit_mgr::test (std::string & response_)
+   {
+      curlpp::Cleanup cleaner;
+      curlpp::Easy    request;
+      _request_setBaseOpts_ (request, "policies");
+      return _request_test_ (request, response_);
+   }
+
+
    bool rabbit_mgr::list_vhosts (vhost::list    & vhosts_,
                                  error_response & error_)
    {

@@ -72,19 +72,19 @@ endif()
 # Append third party include directories to BxRabbitMQ's so exposed
 # headers are visible
 #
-list (APPEND BxRabbitMQ_INCLUDE_DIRS
-  ${BxRabbitMQ_BOOST_INCLUDE_DIRS}
-  ${BxRabbitMQ_RABBITC_INCLUDE_DIR}
-  )
 
 list(FIND BxRabbitMQ_FIND_COMPONENTS "manager" _found_manager)
 if (BxRabbitMQ_WITH_MANAGER)
   list (APPEND BxRabbitMQ_INCLUDE_DIRS
-    ${BxRabbitMQ_CURLPP_INCLUDE_DIR}
-    )
+  )
   set (BxJsontools_DIR ${BxRabbitMQ_BXJSONTOOLS_DIR})
   message (STATUS "[info] BxRabbitMQConfig: Finding package BxJsontools...")
   find_package(BxJsontools ${BxRabbitMQ_BXJSONTOOLS_VERSION} EXACT REQUIRED CONFIG)
+  list (APPEND BxRabbitMQ_INCLUDE_DIRS
+     ${BxRabbitMQ_BOOST_INCLUDE_DIRS}
+     ${BxRabbitMQ_CURLPP_INCLUDE_DIR}
+     ${BxJsontools_INCLUDE_DIRS}
+  )
 # else()
 #   message(FATAL_ERROR "[fatal] BxRabbitMQConfig: No support for BxRabbitMQ/manager!")
 endif (BxRabbitMQ_WITH_MANAGER)

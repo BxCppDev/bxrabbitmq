@@ -29,6 +29,9 @@ namespace rabbitmq {
         rabbit_mgr & operator =  (const rabbit_mgr & mgr_) = delete;
         //
 
+        //  TEST
+        bool test (std::string & response_);
+
         //  VHOSTS
         bool list_vhosts   (vhost::list       & vhosts_,
                             error_response    & error_);
