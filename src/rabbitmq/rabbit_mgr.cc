@@ -23,22 +23,22 @@ namespace rabbitmq {
 
    /***  local  ************************************************************/
 
-   bool _request_test_      (const curlpp::Easy      & request_,
-                             std::string       & response_);
+   bool _request_test_      (const curlpp::Easy & request_,
+                             std::string        & response_);
 
-   bool _request_perform_   (const curlpp::Easy      & request_,
-                             error_response    & error_);
+   bool _request_perform_   (const curlpp::Easy & request_,
+                             error_response     & error_);
 
    template <typename T>
-   bool _request_perform_   (const curlpp::Easy      & request_,
-                             T                 & response_,
-                             error_response    & error_);
+   bool _request_perform_   (const curlpp::Easy & request_,
+                             T                  & response_,
+                             error_response     & error_);
 
-   std::string _vhost_name_ (const std::string & vhost_code_);
+   std::string _vhost_name_ (const std::string  & vhost_code_);
 
-   std::string _vhost_code_ (const std::string & vhost_name_);
+   std::string _vhost_code_ (const std::string  & vhost_name_);
 
-   std::string _to_string_  (const bool          b);
+   std::string _to_string_  (const bool           b);
 
    /************************************************************************/
 
@@ -317,10 +317,10 @@ namespace rabbitmq {
    bool _request_test_ (const curlpp::Easy & request_,
                         std::string  & response_)
    {
-      std::ostringstream os;
+      std::stringstream ss;
       try {
-         os << request_;
-         response_ = os.str ();
+         ss << request_;
+         response_ = ss.str ();
          return true;
       } catch (std::exception & x) {
          response_ = x.what ();
@@ -362,15 +362,15 @@ namespace rabbitmq {
 
 
    template <typename T>
-   bool _request_perform_ (curlpp::Easy   & request_,
-                           T              & response_,
-                           error_response & error_)
+   bool _request_perform_ (const curlpp::Easy & request_,
+                           T                  & response_,
+                           error_response     & error_)
    {
       std::string str_response;
       try {
-         std::ostringstream os;
-         os << request_;
-         str_response = os.str ();
+         std::stringstream ss;
+         ss << request_;
+         str_response = ss.str ();
          error_       = error_response::response_ok ();
       } catch (std::exception & x) {
          std::cerr << "ERROR: " << x.what() << std::endl;
@@ -379,13 +379,13 @@ namespace rabbitmq {
          return false;
       }
       try {
-         std::istringstream is (str_response);
-         jsontools::load (is, response_);
+         std::stringstream ss (str_response);
+         jsontools::load (ss, response_);
          return true;
       } catch (...) {
          //std::clog << "\n== ERROR RESPONSE ==> " << str_response << std::endl;
-         std::istringstream is (str_response);
-         jsontools::load (is, error_);
+         std::stringstream ss (str_response);
+         jsontools::load (ss, error_);
          return false;
       }
    }
@@ -394,8 +394,8 @@ namespace rabbitmq {
    std::string _vhost_name_ (const std::string & vhost_code_)
    {
       std::string name (vhost_code_);
-      size_t      pos;
-      while ((pos = name.find ("%2f")) != std::string::npos) {
+      size_t      pos  = name.find ("%2f");
+      if (pos != std::string::npos) {
          name.replace (pos, 3, "/");
       }
       return name;
@@ -405,13 +405,11 @@ namespace rabbitmq {
    std::string _vhost_code_ (const std::string & vhost_name_)
    {
       std::string code (vhost_name_);
-      size_t      pos;
-      while ((pos = code.find ("/")) != std::string::npos) {
-         code.replace (pos, 1, "%2f");
+      if (code [0] == '/') {
+         code.replace (0, 1, "%2f");
       }
       return code;
    }
-
 
 
    std::string _to_string_ (const bool b)
