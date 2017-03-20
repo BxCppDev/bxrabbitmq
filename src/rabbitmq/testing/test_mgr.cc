@@ -6,9 +6,6 @@
 #include <iostream>
 
 // This project:
-#include <rabbitmq/connection.h>
-#include <rabbitmq/channel.h>
-#include <rabbitmq/parameters.h>
 #include <rabbitmq/rabbit_mgr.h>
 
 namespace rabbitmq {
@@ -213,11 +210,11 @@ namespace rabbitmq {
          std::cerr << " Error : " << error.error << "  " << error.reason << std::endl;
       }
 
-      std::clog << "\n== delete vhost /foo ==" << std::endl;
-      ok = mgr.delete_vhost ("/foo", error);
-      if (!ok) {
-         std::cerr << " Error : " << error.error << "  " << error.reason << std::endl;
-      }
+      // std::clog << "\n== delete vhost /foo ==" << std::endl;
+      // ok = mgr.delete_vhost ("/foo", error);
+      // if (!ok) {
+      //    std::cerr << " Error : " << error.error << "  " << error.reason << std::endl;
+      // }
 
       std::clog << "\n== list vhosts ==" << std::endl;
       ok = mgr.list_vhosts (vhosts, error);

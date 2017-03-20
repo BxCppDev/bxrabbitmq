@@ -11,6 +11,24 @@ function my_exit()
     exit ${error_code}
 }
 
+function do_usage()
+{
+
+    cat<<EOF
+
+build.sh [options]
+
+Options:
+
+  --help   print this help then exit
+  --mgr    build the RabbitMQ management API
+  --bxjsontools-prefix path
+           set the bxjsontools installation prefix (implies --mgr)
+
+EOF
+    return 0
+}
+
 src_dir=$(pwd)
 install_dir=$(pwd)/_install.d
 build_dir=$(pwd)/_build.d
@@ -21,7 +39,10 @@ with_management=false
 
 while [ -n "$1" ]; do
     opt="$1"
-    if [ "${opt}" = "--mgr" ]; then
+    if [ "${opt}" = "--help" ]; then
+	do_usage
+    	my_exit 0
+    elif [ "${opt}" = "--mgr" ]; then
     	with_management=true
     elif [ ${with_management} = true -a "${opt}" = "--bxjsontools-prefix" ]; then
 	shift 1

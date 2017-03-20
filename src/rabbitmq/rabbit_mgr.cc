@@ -23,14 +23,14 @@ namespace rabbitmq {
 
    /***  local  ************************************************************/
 
-   bool _request_test_      (curlpp::Easy      & request_,
+   bool _request_test_      (const curlpp::Easy      & request_,
                              std::string       & response_);
 
-   bool _request_perform_   (curlpp::Easy      & request_,
+   bool _request_perform_   (const curlpp::Easy      & request_,
                              error_response    & error_);
 
    template <typename T>
-   bool _request_perform_   (curlpp::Easy      & request_,
+   bool _request_perform_   (const curlpp::Easy      & request_,
                              T                 & response_,
                              error_response    & error_);
 
@@ -314,7 +314,7 @@ namespace rabbitmq {
 
    /***  local  ***************************************************************************/
 
-   bool _request_test_ (curlpp::Easy & request_,
+   bool _request_test_ (const curlpp::Easy & request_,
                         std::string  & response_)
    {
       std::stringstream ss;
@@ -329,7 +329,7 @@ namespace rabbitmq {
    }
 
 
-   bool _request_perform_ (curlpp::Easy   & request_,
+   bool _request_perform_ (const curlpp::Easy   & request_,
                            error_response & error_)
    {
       std::stringstream ss;
