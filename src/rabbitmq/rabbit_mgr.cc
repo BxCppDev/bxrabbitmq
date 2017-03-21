@@ -394,8 +394,8 @@ namespace rabbitmq {
    std::string _vhost_name_ (const std::string & vhost_code_)
    {
       std::string name (vhost_code_);
-      size_t      pos  = name.find ("%2f");
-      if (pos != std::string::npos) {
+      size_t      pos;
+      while ((pos = name.find ("%2f")) != std::string::npos) {
          name.replace (pos, 3, "/");
       }
       return name;
@@ -405,8 +405,9 @@ namespace rabbitmq {
    std::string _vhost_code_ (const std::string & vhost_name_)
    {
       std::string code (vhost_name_);
-      if (code [0] == '/') {
-         code.replace (0, 1, "%2f");
+      size_t      pos;
+      while ((pos = code.find ("/")) != std::string::npos) {
+         code.replace (pos, 1, "%2f");
       }
       return code;
    }
