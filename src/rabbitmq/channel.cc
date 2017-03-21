@@ -413,7 +413,10 @@ namespace rabbitmq {
                                 params_.internal,
                                 amqp_empty_table); // todo argums
          amqp_rpc_reply_t reply = amqp_get_rpc_reply (_amqp_con_);
-         // TODO
+         if (reply.reply_type != AMQP_RESPONSE_NORMAL) {
+            throw ::rabbitmq::exception ("exchange_declare failure");
+            // todo precisions
+         }
       }
    }
 
@@ -428,6 +431,9 @@ namespace rabbitmq {
                                                           params_.exclusive,
                                                           params_.auto_delete,
                                                           amqp_empty_table);
+         if (r == NULL) {
+            throw ::rabbitmq::exception ("queue_declare failure");
+         }
          params_.name           = str_from_amqp (r->queue);
          amqp_rpc_reply_t reply = amqp_get_rpc_reply (_amqp_con_);
          if (reply.reply_type != AMQP_RESPONSE_NORMAL) {
