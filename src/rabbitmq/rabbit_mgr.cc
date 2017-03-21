@@ -317,10 +317,10 @@ namespace rabbitmq {
    bool _request_test_ (const curlpp::Easy & request_,
                         std::string  & response_)
    {
-      std::stringstream ss;
+      std::ostringstream os;
       try {
-         ss << request_;
-         response_ = ss.str ();
+         os << request_;
+         response_ = os.str ();
          return true;
       } catch (std::exception & x) {
          response_ = x.what ();
@@ -368,9 +368,9 @@ namespace rabbitmq {
    {
       std::string str_response;
       try {
-         std::stringstream ss;
-         ss << request_;
-         str_response = ss.str ();
+         std::ostringstream os;
+         os << request_;
+         str_response = os.str ();
          error_       = error_response::response_ok ();
       } catch (std::exception & x) {
          std::cerr << "ERROR: " << x.what() << std::endl;
@@ -379,13 +379,13 @@ namespace rabbitmq {
          return false;
       }
       try {
-         std::stringstream ss (str_response);
-         jsontools::load (ss, response_);
+         std::istringstream is (str_response);
+         jsontools::load (is, response_);
          return true;
       } catch (...) {
          //std::clog << "\n== ERROR RESPONSE ==> " << str_response << std::endl;
-         std::stringstream ss (str_response);
-         jsontools::load (ss, error_);
+         std::istringstream is (str_response);
+         jsontools::load (is, error_);
          return false;
       }
    }
