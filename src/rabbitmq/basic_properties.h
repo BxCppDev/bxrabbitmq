@@ -3,7 +3,8 @@
 #ifndef BXRABBITMQ_BASIC_PROPERTIES_H
 #define BXRABBITMQ_BASIC_PROPERTIES_H
 
-
+// Third party:
+// - Boost:
 #include <boost/optional.hpp>
 
 namespace rabbitmq {

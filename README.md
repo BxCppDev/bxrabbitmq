@@ -2,19 +2,13 @@
 RabbitMQ client & server administration (C++ library)
 
 The     ``bxrabbitmq``     library     (also   ``BxRabbitMQ``     or
-``Bayeux/RabbitMQ``) consists in  a set of C++ API for RabbitMQ server
+``Bayeux/RabbitMQ``) consists in  a C++ API for RabbitMQ server
 administration and Rabbit clients.
 
 This is a very preliminary work that needs more development and tests.
 
 bxrabbitmq  has  been initiated  in  the  framework of  the  SuperNEMO
 physics experiment software.
-
-**Note for SuperNEMO users:**
-
-The RabbitMQ system is used by  the Vire C++ library for communication
-between C++ and  Java implemented services related to  the Control and
-Monitoring System (CMS) of the SuperNEMO experiment.
 
 ## Dependencies and inspiration
 
@@ -60,25 +54,52 @@ $ export PKG_CONFIG_PATH=/path/to/curlpp/install/dir/lib/../pkgconfig:${PKG_CONF
 $ cmake --help-module FindBoost
 ```
 
-**Note for SuperNEMO users:**
+**Note:**
 
-Cadfaelbrew (https://github.com/SuperNEMO-DBD/brew) is used to build, install and manage
-the SuperNEMO experiment software. It provides formula for CMake, Doxygen, Boost, curl, libssl...
-and various other software that should be used in place of system packages.
-
-2017-01-29: brew formula for curlpp, rabbitmq-c, bxjsontools and bxrabbitmq are not available yet.
+* 2017-01-29: brew formulae for curlpp, rabbitmq-c, bxjsontools and bxrabbitmq are not available yet.
 
 ### Download the source code from GitHub:
+
+* Download:
+
 ```sh
 $ mkdir -p ${HOME}/bxrabbitmq/_source.d/
 $ cd       ${HOME}/bxrabbitmq/_source.d/
-$ git clone https://github.com/BxCppDev/bxrabbitmq.git
+$ git clone https://github.com/BxCppDev/bxrabbitmq.git bxrabbitmq
 ```
+
+or, for a specific tag:
+
+```sh
+$ git clone -b '0.1.0' --single-branch https://github.com/BxCppDev/bxrabbitmq.git bxrabbitmq-0.1.0
+```
+
+* Configure, build, install:
 
 ```sh
 $ mkdir -p ${HOME}/bxrabbitmq/_build.d/
 $ cd       ${HOME}/bxrabbitmq/_build.d/
-$ cmake -DCMAKE_INSTALL_PREFIX=../_install.d  ../_source.d/bxrabbitmq
+$ cmake -DCMAKE_INSTALL_PREFIX=../_install.d ../_source.d/bxrabbitmq[-0.1.0]
+$ make
+$ make test
+$ make install
+```
+
+Supported options and configuration parameters:
+
+* ``BXRABBITMQ_WITH_MANAGER`` : flag to build the RabbitMQ server management API (implies ``curlpp``
+   and ``bxjsontools``, default: ``OFF``),
+* ``BOOST_ROOT`` : path to your installation of Boost libraries.
+
+Example:
+```sh
+$ mkdir -p ${HOME}/bxrabbitmq/_build.d/
+$ cd       ${HOME}/bxrabbitmq/_build.d/
+$ cmake \
+    -DCMAKE_INSTALL_PREFIX=../_install.d \
+    -DBXRABBITMQ_WITH_MANAGER=ON \
+    -DBxJsontools_DIR=$(bxjsontools-query --cmakedir) \
+    ../_source.d/bxrabbitmq[-0.1.0]
 $ make
 $ make test
 $ make install

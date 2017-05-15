@@ -7,7 +7,8 @@
 #include <string>
 #include <list>
 
-// Bayeux/jsontools:
+// Third party:
+// - Bayeux/jsontools:
 #include "jsontools/i_jsonizable.h"
 
 namespace rabbitmq {

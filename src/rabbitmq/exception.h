@@ -7,7 +7,6 @@
 #include <string>
 #include <exception>
 
-
 namespace rabbitmq {
 
   /// \brief Basic exception

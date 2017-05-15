@@ -3,6 +3,7 @@
 #ifndef BXRABBITMQ_CHANNEL_H
 #define BXRABBITMQ_CHANNEL_H
 
+// This project:
 #include "parameters.h"
 #include "basic_properties.h"
 

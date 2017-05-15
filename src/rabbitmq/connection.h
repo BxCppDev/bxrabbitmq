@@ -3,8 +3,12 @@
 #ifndef BXRABBITMQ_CONNECTION_H
 #define BXRABBITMQ_CONNECTION_H
 
+// Standard library:
 #include <memory>
-#include <boost/scoped_ptr.hpp>
+
+// Third party:
+// - Boost:
+// #include <boost/core/noncopyable.hpp>
 
 // this project:
 #include "parameters.h"
@@ -33,9 +37,9 @@ namespace rabbitmq {
         channel &                     grab_channel              ();
 
      private:
-        connection_parameters       _params_;
-        boost::scoped_ptr <channel> _chan1_;  // TODO thread safety => pour l'instant un seul channel
-                                              // +tard plusieurs (avec différentes connexions en implem)
+        connection_parameters     _params_;
+        std::unique_ptr <channel> _chan1_;  // TODO thread safety => for now only one channel
+                                            // later: several possible with different connection
   };
 
 } // end of namespace rabbitmq
