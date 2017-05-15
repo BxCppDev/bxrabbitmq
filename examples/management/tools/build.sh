@@ -16,7 +16,7 @@ install_dir=$(pwd)/_install.d
 build_dir=$(pwd)/_build.d
 
 devel=false
-bxrabbitmq_prefix=$(bxrabbitmq-query --prefix)
+bxrabbitmq_prefix=$(bxrabbitmq-query --cmakedir)
 
 while [ -n "$1" ]; do
     opt="$1"

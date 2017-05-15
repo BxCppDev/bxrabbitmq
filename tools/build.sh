@@ -34,7 +34,7 @@ install_dir=$(pwd)/_install.d
 build_dir=$(pwd)/_build.d
 
 devel=false
-bxjsontools_prefix=$(bxjsontools-query --prefix)
+bxjsontools_prefix=$(bxjsontools-query --cmakedir)
 with_management=false
 
 while [ -n "$1" ]; do
