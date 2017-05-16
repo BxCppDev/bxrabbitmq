@@ -19,7 +19,7 @@ list(INSERT CMAKE_MODULE_PATH 0 ${PROJECT_SOURCE_DIR}/cmake)
 
 # - Versioning
 set(BxRabbitMQ_VERSION_MAJOR 0)
-set(BxRabbitMQ_VERSION_MINOR 2)
+set(BxRabbitMQ_VERSION_MINOR 3)
 set(BxRabbitMQ_VERSION_PATCH 0)
 set(BxRabbitMQ_VERSION
   "${BxRabbitMQ_VERSION_MAJOR}.${BxRabbitMQ_VERSION_MINOR}.${BxRabbitMQ_VERSION_PATCH}")
@@ -345,7 +345,7 @@ if (BXRABBITMQ_WITH_MANAGER)
 
 endif (BXRABBITMQ_WITH_MANAGER)
 
-if (RABBITMQ_ENABLE_TESTING)
+if (BXRABBITMQ_ENABLE_TESTING)
   foreach (_testsource ${BxRabbitMQ_TESTS})
     set (_bxrabbitmq_TEST_ENVIRONMENT
       # "BXRABBITMQ_RESOURCE_FILES_DIR=${PROJECT_SOURCE_DIR}/resources"
@@ -383,7 +383,7 @@ if (RABBITMQ_ENABLE_TESTING)
       ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bxrabbitmq_tests
       )
   endforeach ()
-endif (RABBITMQ_ENABLE_TESTING)
+endif (BXRABBITMQ_ENABLE_TESTING)
 
 #-----------------------------------------------------------------------
 # Install targets and resources
