@@ -287,10 +287,10 @@ install ( DIRECTORY
   WORLD_READ WORLD_EXECUTE
   )
 
-option (RABBITMQ_ENABLE_TESTING "Build unit testing system for Bayeux/rabbitmq" ON)
-if (RABBITMQ_ENABLE_TESTING)
+option (BXRABBITMQ_ENABLE_TESTING "Build unit testing system for Bayeux/rabbitmq" ON)
+if (BXRABBITMQ_ENABLE_TESTING)
   enable_testing ()
-endif (RABBITMQ_ENABLE_TESTING)
+endif (BXRABBITMQ_ENABLE_TESTING)
 
 set (BxRabbitMQ_TESTS
   src/rabbitmq/testing/test_rabbitmq_0.cxx
