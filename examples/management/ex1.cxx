@@ -16,7 +16,7 @@ int main ()
    bool                     ok;
    rabbitmq::error_response error;
    rabbitmq::vhost::list    vhosts;
-   rabbitmq::rabbit_mgr     mgr ("localhost", 15672, "guest", "guest");
+   rabbitmq::rabbit_mgr     mgr ("localhost", 15671, "admin", "what");
 
    ok = mgr.list_vhosts (vhosts, error);
    if (ok) {

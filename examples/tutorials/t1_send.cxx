@@ -28,6 +28,10 @@ void send ()
 {
    std::clog << "\nTUTORIAL 1 : 'Hello World' - send\n\n" ;
    rabbitmq::connection_parameters c_par;
+   c_par.host   = "caerabbitmq.in2p3.fr";
+   c_par.port   = 5671;
+   c_par.login  = "guest";
+   c_par.passwd = "guest";
    rabbitmq::connection            con (c_par);
    if (con.is_ok ()) {
       rabbitmq::channel &        chan = con.grab_channel ();

@@ -3,11 +3,8 @@
 #ifndef BXRABBITMQ_RABBIT_MGR_H
 #define BXRABBITMQ_RABBIT_MGR_H
 
-// Third party:
-// - cURLpp:
 #include <curlpp/Easy.hpp>
 
-// This project:
 #include "rabbitmq/management.h"
 
 namespace rabbitmq {
@@ -20,19 +17,17 @@ namespace rabbitmq {
         static const uint16_t SSL_PORT = 15671;
 
      public:
-        // Constructor & co
+        /// Constructor & co
         rabbit_mgr  (const std::string & server_host_,
                      const uint16_t      server_port_,
                      const std::string & user_login_,
                      const std::string & user_passwd_);
-
-        //  Dtor & co : forbidden
+        //  Ctor & co : forbidden
+        ~rabbit_mgr ();
         rabbit_mgr  ()                                     = delete;
         rabbit_mgr  (const rabbit_mgr & mgr_)              = delete;
         rabbit_mgr & operator =  (const rabbit_mgr & mgr_) = delete;
-
-        //  Dtor
-        ~rabbit_mgr ();
+        //
 
         //  TEST
         bool test (std::string & response_);
@@ -105,6 +100,9 @@ namespace rabbitmq {
                                const std::string & configure_,
                                const std::string & write_,
                                const std::string & read_,
+                               error_response    & error_);
+
+        bool set_permissions  (const permissions & perms_,
                                error_response    & error_);
 
         // TODO set_perm & bindings

@@ -277,6 +277,12 @@ namespace rabbitmq {
       return _request_perform_ (request, error_);
    }
 
+   bool rabbit_mgr::set_permissions (const permissions & perms_,
+                                     error_response    & error_)
+   {
+      return set_permissions (perms_.user, perms_.vhost, perms_.configure, perms_.write, perms_.read, error_);
+   }
+
 
    /***  private  ************************************************************************/
 
