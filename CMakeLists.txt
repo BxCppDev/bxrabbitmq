@@ -19,7 +19,7 @@ list(INSERT CMAKE_MODULE_PATH 0 ${PROJECT_SOURCE_DIR}/cmake)
 
 # - Versioning
 set(BxRabbitMQ_VERSION_MAJOR 0)
-set(BxRabbitMQ_VERSION_MINOR 3)
+set(BxRabbitMQ_VERSION_MINOR 4)
 set(BxRabbitMQ_VERSION_PATCH 0)
 set(BxRabbitMQ_VERSION
   "${BxRabbitMQ_VERSION_MAJOR}.${BxRabbitMQ_VERSION_MINOR}.${BxRabbitMQ_VERSION_PATCH}")
@@ -110,6 +110,7 @@ find_package (Boost ${BXRABBITMQ_MIN_BOOST_VERSION} REQUIRED)
 message( STATUS "[info] Boost version      = '${Boost_VERSION}'")
 message( STATUS "[info] Boost found at '${Boost_INCLUDE_DIRS}'")
 message (STATUS "[info] Boost_INCLUDE_DIRS = '${Boost_INCLUDE_DIRS}'")
+message( STATUS "[info] Boost_LIBRARY_DIRS = '${Boost_LIBRARY_DIRS}'")
 message( STATUS "[info] Boost_LIBRARIES    = '${Boost_LIBRARIES}'")
 message( STATUS "[info] Boost_MAJOR_VERSION = '${Boost_MAJOR_VERSION}'")
 message( STATUS "[info] Boost_MINOR_VERSION = '${Boost_MINOR_VERSION}'")
@@ -139,12 +140,14 @@ if (BXRABBITMQ_WITH_MANAGER)
   message (STATUS "[info] CURLPP_LIBRARY_NAME = '${CURLPP_LIBRARY_NAME}'")
   set(CURLPP_LIBRARY_PATH "${cURLpp_PREFIX}/lib")
   message (STATUS "[info] CURLPP_LIBRARY_PATH = '${CURLPP_LIBRARY_PATH}'")
+
   find_library(CURLPP_LIBRARY
     NAMES ${CURLPP_LIBRARY_NAME}
     PATHS ${CURLPP_LIBRARY_PATH}
     )
   message (STATUS "[info] CURLPP_LIBRARY = '${CURLPP_LIBRARY}'")
   message (STATUS "[info] Finding package BxJsontools...")
+
   find_package (BxJsontools 0.1 REQUIRED CONFIG)
   message (STATUS "[info] BxJsontools_VERSION      = '${BxJsontools_VERSION}'")
   message (STATUS "[info] BxJsontools_INCLUDE_DIRS = '${BxJsontools_INCLUDE_DIRS}'")
