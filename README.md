@@ -56,11 +56,13 @@ $ cmake --help-module FindBoost
 
 **Note:**
 
-* 2017-01-29: brew formulae for curlpp, rabbitmq-c, bxjsontools and bxrabbitmq are not available yet.
+* 2017-09-26: Linuxbrew formula for rabbitmq-c is available from Linuxbrew
+core tap. Formulas for bxjsontools and bxrabbitmq are available from
+the  https://github.com/BxCppDev/homebrew-bxtap.
 
 ### Download the source code from GitHub:
 
-* Download:
+* Download the source code from the default ``develop`` branch:
 
 ```sh
 $ mkdir -p ${HOME}/bxrabbitmq/_source.d/
@@ -71,7 +73,7 @@ $ git clone https://github.com/BxCppDev/bxrabbitmq.git bxrabbitmq
 or, for a specific tag:
 
 ```sh
-$ git clone -b '0.1.0' --single-branch https://github.com/BxCppDev/bxrabbitmq.git bxrabbitmq-0.1.0
+$ git clone -b '0.3.1' --single-branch https://github.com/BxCppDev/bxrabbitmq.git bxrabbitmq-0.3.1
 ```
 
 * Configure, build, install:
