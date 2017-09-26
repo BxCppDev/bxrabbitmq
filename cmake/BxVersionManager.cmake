@@ -1,4 +1,7 @@
 # CMake tools for version management
+# Author: F.Mauger
+# Date: 2017-09-26
+# Copyright 2017 (c) François Mauger, Université de Caen Normandie
 
 function(bx_version_build_version_number prefix_)
   set(${prefix_}_VERSION
@@ -10,25 +13,30 @@ function(bx_version_extract_patch_from_db major_ minor_ patch_)
   # message(STATUS "[info] bx_version_extract_patch_from_db: Entering...")
   # message(STATUS "[info]   - Major   = ${major_}")
   # message(STATUS "[info]   - Minor   = ${minor_}")
-  file(STRINGS
-    ${PROJECT_SOURCE_DIR}/cmake/BxPackageVersions.db
-    _bx_package_versions_lines
-    REGEX "^([0-9]+)\\.([0-9]+)\\.([0-9+])"
-    )
-  # message(STATUS "[info]  Lines = ${_bx_package_versions_lines}")
-  foreach(line ${_bx_package_versions_lines})
-    string(REPLACE "." ";" _version_list ${line})
-    # message(STATUS "[info]  Version list = ${_version_list}")
-    list(GET _version_list 0 _version_major)
-    list(GET _version_list 1 _version_minor)
-    list(GET _version_list 2 _version_patch)
-    if(${_version_major} EQUAL ${major_})
-      if(${_version_minor} EQUAL ${minor_})
-	set(${patch_} ${_version_patch} PARENT_SCOPE)
-	# message(STATUS "[info]  Resolved patch = ${_version_patch}")
+  set(_version_patch 0)
+  if (EXISTS ${PROJECT_SOURCE_DIR}/cmake/BxPackageVersions.db)
+    file(STRINGS
+      ${PROJECT_SOURCE_DIR}/cmake/BxPackageVersions.db
+      _bx_package_versions_lines
+      REGEX "^([0-9]+)\\.([0-9]+)\\.([0-9+])"
+      )
+    # message(STATUS "[info]  Lines = ${_bx_package_versions_lines}")
+    foreach(line ${_bx_package_versions_lines})
+      string(REPLACE "." ";" _version_list ${line})
+      # message(STATUS "[info]  Version list = ${_version_list}")
+      list(GET _version_list 0 _version_major)
+      list(GET _version_list 1 _version_minor)
+      list(GET _version_list 2 _version_patch)
+      if(${_version_major} EQUAL ${major_})
+	if(${_version_minor} EQUAL ${minor_})
+	  set(${patch_} ${_version_patch} PARENT_SCOPE)
+	  # message(STATUS "[info]  Resolved patch = ${_version_patch}")
+	endif()
       endif()
-    endif()
-  endforeach()
+    endforeach()
+  else()
+    set(${patch_} ${_version_patch} PARENT_SCOPE)
+  endif()
   # message(STATUS "[info]   - New patch is set to : $ {${patch_}}")
   # message(STATUS "[info] bx_version_extract_patch_from_db: Exiting.")
 endfunction()
