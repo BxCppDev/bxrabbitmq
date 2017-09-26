@@ -34,7 +34,7 @@ install_dir=$(pwd)/_install.d
 build_dir=$(pwd)/_build.d
 
 devel=false
-bxjsontools_prefix=$(bxjsontools-query --cmakedir)
+bxjsontools_prefix=
 with_management=false
 
 while [ -n "$1" ]; do
@@ -50,6 +50,12 @@ while [ -n "$1" ]; do
     fi
     shift 1
 done
+
+if [ ${with_management} = true ]; then
+    if [ "x${bxjsontools_prefix}" = "x" ]; then
+	bxjsontools_prefix=$(bxjsontools-query --cmakedir)
+    fi
+fi
 
 # brewsh
 # curlpp_setup

@@ -17,12 +17,12 @@ endif()
 # - Load Custom Modules
 list(INSERT CMAKE_MODULE_PATH 0 ${PROJECT_SOURCE_DIR}/cmake)
 
-# - Versioning
-set(BxRabbitMQ_VERSION_MAJOR 0)
-set(BxRabbitMQ_VERSION_MINOR 4)
-set(BxRabbitMQ_VERSION_PATCH 0)
-set(BxRabbitMQ_VERSION
-  "${BxRabbitMQ_VERSION_MAJOR}.${BxRabbitMQ_VERSION_MINOR}.${BxRabbitMQ_VERSION_PATCH}")
+# - Version number management utilities:
+include(BxVersionManager)
+
+# - Versioning only giving major and minor. Patch number is
+#   automatically deduced from an external file.
+bx_version_set(BxRabbitMQ 0 3)
 
 #-----------------------------------------------------------------------
 # - Standard UNIX Tool install paths, including relative paths for use
