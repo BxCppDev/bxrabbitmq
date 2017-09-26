@@ -21,8 +21,8 @@ list(INSERT CMAKE_MODULE_PATH 0 ${PROJECT_SOURCE_DIR}/cmake)
 include(BxVersionManager)
 
 # - Versioning only giving major and minor. Patch number is
-#   automatically deduced from an external file.
-bx_version_set(BxRabbitMQ 0 3)
+#   0 or automatically deduced from an external file.
+bx_version_set(BxRabbitMQ 0 4)
 
 #-----------------------------------------------------------------------
 # - Standard UNIX Tool install paths, including relative paths for use
