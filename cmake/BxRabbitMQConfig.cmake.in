@@ -36,6 +36,7 @@ set (BxRabbitMQ_WITH_MANAGER @BxRabbitMQ_WITH_MANAGER@)
 #
 
 set (BxRabbitMQ_INCLUDE_DIR "${__bxrabbitmq_config_dir}/@BXRABBITMQ_CMAKEDIR_TO_INCLUDEDIR@")
+set (BxRabbitMQ_LIB_DIR "${__bxrabbitmq_config_dir}/@BXRABBITMQ_CMAKEDIR_TO_LIBDIR@")
 
 mark_as_advanced (BxRabbitMQ_INCLUDE_DIR)
 set (BxRabbitMQ_INCLUDE_DIRS "${BxRabbitMQ_INCLUDE_DIR}" "${BxRabbitMQ_INCLUDE_DIR}/bayeux")
@@ -104,7 +105,9 @@ if (NOT BxRabbitMQ_TARGETS_LOADED)
 endif ()
 
 # - RabbitMQ itself
-set (BxRabbitMQ_LIBRARY Bayeux_rabbitmq CACHE FILE "BxRabbitMQ library (imported)")
+set (BxRabbitMQ_LIBRARY
+  "${BxRabbitMQ_LIB_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}Bayeux_rabbitmq${CMAKE_SHARED_LIBRARY_SUFFIX}"
+  CACHE FILE "BxRabbitMQ library (imported)")
 set (BxRabbitMQ_LIBRARIES ${BxRabbitMQ_LIBRARY})
 list (APPEND BxRabbitMQ_LIBRARIES
   ${BxRabbitMQ_RABBITC_LIBRARY}
@@ -115,7 +118,9 @@ message (STATUS "[info] BxRabbitMQConfig: BxRabbitMQ_LIBRARIES = '${BxRabbitMQ_L
 
 if (BxRabbitMQ_WITH_MANAGER)
 
-  set (BxRabbitMQ_MANAGER_LIBRARY Bayeux_rabbitmq_manager CACHE FILE "BxRabbitMQ manager library (imported)")
+  set (BxRabbitMQ_MANAGER_LIBRARY
+    "${BxRabbitMQ_LIB_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}Bayeux_rabbitmq_manager${CMAKE_SHARED_LIBRARY_SUFFIX}"
+    CACHE FILE "BxRabbitMQ manager library (imported)")
   set (BxRabbitMQ_MANAGER_LIBRARIES ${BxRabbitMQ_MANAGER_LIBRARY})
   if (BxRabbitMQ_FIND_REQUIRED_manager)
     list (APPEND BxRabbitMQ_MANAGER_LIBRARIES
