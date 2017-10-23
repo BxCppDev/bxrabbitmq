@@ -1,5 +1,6 @@
 # - Config file for the RabbitMQ package
 # It defines the following variables
+#  BxRabbitMQ_VERSION      - BxRabbitMQ version
 #  BxRabbitMQ_INCLUDE_DIRS - include directories for Bayeux/RabbitMQ
 #  BxRabbitMQ_DEFINITIONS  - compile definitions needed to use Bayeux/RabbitMQ
 #  BxRabbitMQ_LIBRARIES    - libraries to link against
@@ -29,25 +30,35 @@
 get_filename_component (__bxrabbitmq_config_dir "${CMAKE_CURRENT_LIST_FILE}" PATH)
 message (STATUS "[info] BxRabbitMQConfig: in '${__bxrabbitmq_config_dir}'")
 
+set (BxRabbitMQ_VERSION      @BxRabbitMQ_VERSION@)
+mark_as_advanced (BxRabbitMQ_VERSION)
+
 set (BxRabbitMQ_WITH_MANAGER @BxRabbitMQ_WITH_MANAGER@)
+mark_as_advanced (BxRabbitMQ_WITH_MANAGER)
+
+#-----------------------------------------------------------------------
+set (BxRabbitMQ_DEFINITIONS -std=c++11)
+mark_as_advanced (BxRabbitMQ_DEFINITIONS)
+
+message (STATUS "[info] BxRabbitMQConfig: BxRabbitMQ_DEFINITIONS = '${BxRabbitMQ_DEFINITIONS}'")
+if (CMAKE_COMPILER_IS_GNUCXX)
+  set (CMAKE_CXX_FLAGS ${BxRabbitMQ_DEFINITIONS})
+endif ()
 
 #-----------------------------------------------------------------------
 # Hard code paths to headers
 #
 
 set (BxRabbitMQ_INCLUDE_DIR "${__bxrabbitmq_config_dir}/@BXRABBITMQ_CMAKEDIR_TO_INCLUDEDIR@")
-set (BxRabbitMQ_LIB_DIR "${__bxrabbitmq_config_dir}/@BXRABBITMQ_CMAKEDIR_TO_LIBDIR@")
-
 mark_as_advanced (BxRabbitMQ_INCLUDE_DIR)
+
+set (BxRabbitMQ_LIB_DIR "${__bxrabbitmq_config_dir}/@BXRABBITMQ_CMAKEDIR_TO_LIBDIR@")
+mark_as_advanced (BxRabbitMQ_LIB_DIR)
+
 set (BxRabbitMQ_INCLUDE_DIRS "${BxRabbitMQ_INCLUDE_DIR}" "${BxRabbitMQ_INCLUDE_DIR}/bayeux")
 message (STATUS "[info] BxRabbitMQConfig: BxRabbitMQ_INCLUDE_DIRS = '${BxRabbitMQ_INCLUDE_DIRS}'")
 
 #-----------------------------------------------------------------------
-set (BxRabbitMQ_DEFINITIONS -std=c++11)
-message (STATUS "[info] BxRabbitMQConfig: BxRabbitMQ_DEFINITIONS = '${BxRabbitMQ_DEFINITIONS}'")
-if (CMAKE_COMPILER_IS_GNUCXX)
-  set (CMAKE_CXX_FLAGS ${BxRabbitMQ_DEFINITIONS})
-endif ()
 
 set (BxRabbitMQ_BOOST_VERSION  @BxRabbitMQ_BOOST_VERSION@)
 set (Boost_NO_BOOST_CMAKE ON)
@@ -77,17 +88,17 @@ endif()
 list(FIND BxRabbitMQ_FIND_COMPONENTS "manager" _found_manager)
 if (BxRabbitMQ_WITH_MANAGER)
   list (APPEND BxRabbitMQ_INCLUDE_DIRS
-  )
+    )
   set (BxJsontools_DIR ${BxRabbitMQ_BXJSONTOOLS_DIR})
   message (STATUS "[info] BxRabbitMQConfig: Finding package BxJsontools...")
   find_package(BxJsontools ${BxRabbitMQ_BXJSONTOOLS_VERSION} EXACT REQUIRED CONFIG)
   list (APPEND BxRabbitMQ_INCLUDE_DIRS
-     ${BxRabbitMQ_BOOST_INCLUDE_DIRS}
-     ${BxRabbitMQ_CURLPP_INCLUDE_DIR}
-     ${BxJsontools_INCLUDE_DIRS}
-  )
-# else()
-#   message(FATAL_ERROR "[fatal] BxRabbitMQConfig: No support for BxRabbitMQ/manager!")
+    ${BxRabbitMQ_BOOST_INCLUDE_DIRS}
+    ${BxRabbitMQ_CURLPP_INCLUDE_DIR}
+    ${BxJsontools_INCLUDE_DIRS}
+    )
+  # else()
+  #   message(FATAL_ERROR "[fatal] BxRabbitMQConfig: No support for BxRabbitMQ/manager!")
 endif (BxRabbitMQ_WITH_MANAGER)
 if (NOT _found_manager EQUAL -1)
   set (BxRabbitMQ_FIND_REQUIRED_manager 1)
