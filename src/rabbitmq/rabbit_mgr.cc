@@ -209,17 +209,47 @@ namespace rabbitmq {
                               const std::string & passwd_,
                               error_response    & error_)
    {
-      curlpp::Cleanup cleaner;
-      curlpp::Easy    request;
-      std::string     options;
-      options = options + "{";
-      options = options + "\"password\"" + ": " + "\"" + passwd_ + "\"";
-      options = options + ", ";
-      options = options + "\"tags\""     + ": " + "\"" +           "\"";   //  TODO tags ...
-      options = options + "}";
-      _request_setBaseOpts_ (request, "users/" + name_, "PUT", true);
-      request.setOpt (new curlpp::options::PostFields (options));
-      return _request_perform_ (request, error_);
+      user::list users;
+      bool       ok = list_users (users, error_);
+      if (ok) {
+         for (user::list::iterator iter = users.begin(); iter != users.end(); iter++) {
+            if ((*iter).name == name_) {
+               error_.error  = "user "+ name_ + " not added";
+               error_.reason = "user already exists";
+               ok            = false;
+               break;
+            }
+         }
+         if (ok) ok = _raw_add_user_ (name_, "" , passwd_, error_);
+      };
+      return ok;
+   }
+
+
+   bool rabbit_mgr::change_user_password (const std::string & name_,
+                                          const std::string & passwd_,
+                                          error_response    & error_)
+   {
+      user       usr;
+      user::list users;
+      bool       ok = list_users (users, error_);
+      if (ok) {
+         ok = false;
+         for (user::list::iterator iter = users.begin(); iter != users.end(); iter++) {
+            if ((*iter).name == name_) {
+               usr = *iter;
+               ok  = true;
+               break;
+            }
+         }
+         if (ok) {
+            ok = _raw_add_user_ (name_, usr.tags, passwd_, error_);
+         } else {
+            error_.error  = "password not changed";
+            error_.reason = "user "+ name_ + " doesn't exist";
+         }
+      };
+      return ok;
    }
 
 
@@ -315,6 +345,25 @@ namespace rabbitmq {
          request_.setOpt (new curlpp::options::HttpHeader (header));
          request_.setOpt (new curlpp::options::Header (true));
       }
+   }
+
+
+   bool rabbit_mgr::_raw_add_user_ (const std::string & name_,
+                                    const std::string & tags_,
+                                    const std::string & passwd_,
+                                    error_response    & error_)
+   {
+      curlpp::Cleanup cleaner;
+      curlpp::Easy    request;
+      std::string     options;
+      options = options + "{";
+      options = options + "\"password\"" + ": " + "\"" + passwd_ + "\"";
+      options = options + ", ";
+      options = options + "\"tags\""     + ": " + "\"" + tags_   + "\"";
+      options = options + "}";
+      _request_setBaseOpts_ (request, "users/" + name_, "PUT", true);
+      request.setOpt (new curlpp::options::PostFields (options));
+      return _request_perform_ (request, error_);
    }
 
 

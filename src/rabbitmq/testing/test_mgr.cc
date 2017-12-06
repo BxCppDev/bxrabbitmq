@@ -116,6 +116,12 @@ namespace rabbitmq {
          std::cerr << " Error : " << error.error << "  " << error.reason << std::endl;
       }
 
+      std::clog << "\n== add user hommet ==" << std::endl;
+      ok = mgr.add_user ("hommet", "BOBOB", error);
+      if (!ok) {
+         std::cerr << " Error : " << error.error << "  " << error.reason << std::endl;
+      }
+
       std::clog << "\n== add user Zappa ==" << std::endl;
       ok = mgr.add_user ("Zappa", "Freakout", error);
       if (!ok) {
@@ -140,6 +146,24 @@ namespace rabbitmq {
 
       std::clog << "\n== set permissions '.*' '.*' '.*' to 'Zappa' on '/foo' ==" << std::endl;
       ok = mgr.set_permissions ("Zappa", "/foo", ".*", ".*", ".*", error);
+      if (!ok) {
+         std::cerr << " Error : " << error.error << "  " << error.reason << std::endl;
+      }
+
+      std::clog << "\n== change Vistemboir password ==" << std::endl;
+      ok = mgr.change_user_password ("Vistemboir", "Kseksa", error);
+      if (!ok) {
+         std::cerr << " Error : " << error.error << "  " << error.reason << std::endl;
+      }
+
+      std::clog << "\n== change Zappa password ==" << std::endl;
+      ok = mgr.change_user_password ("Zappa", "Mothers", error);
+      if (!ok) {
+         std::cerr << " Error : " << error.error << "  " << error.reason << std::endl;
+      }
+
+      std::clog << "\n== change hommet password ==" << std::endl;
+      ok = mgr.change_user_password ("hommet", "BOBOB", error);
       if (!ok) {
          std::cerr << " Error : " << error.error << "  " << error.reason << std::endl;
       }

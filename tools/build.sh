@@ -123,13 +123,13 @@ if [ $? -ne 0 ]; then
     my_exit 1
 fi
 
-echo >&2 ""
-echo >&2 "[info] Testing..."
-make test
-if [ $? -ne 0 ]; then
-    echo >&2 "[error] Testing failed! Abort!"
-    my_exit 1
-fi
+#echo >&2 ""
+#echo >&2 "[info] Testing..."
+#make test
+#if [ $? -ne 0 ]; then
+#    echo >&2 "[error] Testing failed! Abort!"
+#    my_exit 1
+#fi
 
 echo >&2 ""
 echo >&2 "[info] Installing..."

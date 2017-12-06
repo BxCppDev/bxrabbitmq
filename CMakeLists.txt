@@ -134,10 +134,10 @@ if (BXRABBITMQ_WITH_MANAGER)
   message (STATUS "[info] cURLpp_LDFLAGS           = '${cURLpp_LDFLAGS}'")
   message (STATUS "[info] cURLpp_LIBDIR            = '${cURLpp_PREFIX}/lib'")
   message (STATUS "[info] cURLpp_LIBRARIES         = '${cURLpp_LIBRARIES}'")
-  message (STATUS "[info] cURLpp_DIR               = '${cURLpp_PREFIX}'")
+  message (STATUS "[info] cURLpp_PREFIX            = '${cURLpp_PREFIX}'")
   find_path(CURLPP_INCLUDE_DIR
     NAMES "curlpp/cURLpp.hpp"
-    PATHS ${cURLpp_INCLUDE_DIRS}
+    HINTS ${cURLpp_PREFIX}/include # ;${cURLpp_INCLUDE_DIRS}
     )
   message (STATUS "[info] CURLPP_INCLUDE_DIR = '${CURLPP_INCLUDE_DIR}'")
   set(CURLPP_LIBRARY_NAME "libcurlpp${CMAKE_SHARED_LIBRARY_SUFFIX}")
