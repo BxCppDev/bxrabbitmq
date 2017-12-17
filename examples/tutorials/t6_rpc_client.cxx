@@ -33,8 +33,9 @@ int main (int argc, char** argv)
 void rpc_client (const unsigned int num)
 {
    std::clog << "\nTUTORIAL 6 : 'RPC' - rpc client\n\n" ;
+   const bool                      publisher_confirm = true;
    rabbitmq::connection_parameters c_par;
-   rabbitmq::connection            con (c_par);
+   rabbitmq::connection            con (c_par, publisher_confirm);
    if (con.is_ok ()) {
       rabbitmq::channel &          chan = con.grab_channel ();
       std::string                  routing_key;

@@ -29,7 +29,7 @@ namespace rabbitmq {
          static const basic_properties         props_from_amqp (const amqp_basic_properties_t & props_);
 
       public:
-         impl  ();
+         impl  (const bool publisher_confirm = false);
          ~impl ();  //  TODO
 
          void connect          (const connection_parameters & params, const unsigned int num);
@@ -47,9 +47,7 @@ namespace rabbitmq {
          void basic_publish    (const std::string &           exchange_,
                                 const std::string &           routing_key_,
                                 const std::string &           body_,
-                                const basic_properties &      props_,
-                                const bool &                  mandatory_,
-                                const bool &                  immediate_);
+                                const basic_properties &      props_);
 
         void basic_consume     (const std::string &           queue_,
                                 const std::string &           consumer_tag_,
@@ -80,14 +78,17 @@ namespace rabbitmq {
          bool                    _channel_ok_;
          pid_t                   _consuming_;
          bool                    _acknowledge_;
+         bool                    _publisher_confirm_;
    };
 
    /*******************************************************************************/
 
 
-   channel::channel (const connection & con_, const unsigned int num_)
+   channel::channel (const connection & con_,
+                     const unsigned int num_,
+                     const bool         publisher_confirm_)
    {
-      _pimpl_ = new impl ();
+      _pimpl_ = new impl (publisher_confirm_);
       _pimpl_->connect (con_.get_connection_parameters (), num_);
       return;
    }
@@ -123,11 +124,9 @@ namespace rabbitmq {
    void channel::basic_publish (const std::string        exchange_,
                                 const std::string        routing_key_,
                                 const std::string        body_,
-                                const basic_properties & props_,
-                                const bool               mandatory_,
-                                const bool               immediate_)
+                                const basic_properties & props_)
    {
-      _pimpl_->basic_publish (exchange_, routing_key_, body_, props_, mandatory_, immediate_);
+      _pimpl_->basic_publish (exchange_, routing_key_, body_, props_);
    }
 
    void channel::basic_consume (const std::string queue_,
@@ -324,11 +323,12 @@ namespace rabbitmq {
       return props;
    }
 
-   channel::impl::impl ()
+   channel::impl::impl (const bool publisher_confirm_)
    {
-      _login_ok_   = false;
-      _channel_ok_ = false;
-      _consuming_  = 0;
+      _login_ok_          = false;
+      _channel_ok_        = false;
+      _consuming_         = 0;
+      _publisher_confirm_ = publisher_confirm_;
    }
 
    void channel::impl::connect (const connection_parameters & params_, const unsigned int num_)
@@ -378,6 +378,12 @@ namespace rabbitmq {
       reply = amqp_get_rpc_reply (_amqp_con_);
       if (reply.reply_type != AMQP_RESPONSE_NORMAL) {
          throw ::rabbitmq::exception ("Unable to create Rabbit channel");
+      }
+      if (_publisher_confirm_) {
+         amqp_confirm_select_ok_t* ok = amqp_confirm_select (_amqp_con_, _amqp_ch_);
+         if (ok == NULL) {
+            throw ::rabbitmq::exception ("Unable to select publisher confirm mode");
+         }
       }
       _channel_ok_ = true;
    }
@@ -469,9 +475,7 @@ namespace rabbitmq {
    void channel::impl::basic_publish (const std::string &      exchange_,
                                       const std::string &      routing_key_,
                                       const std::string &      body_,
-                                      const basic_properties & props_,
-                                      const bool &             mandatory_,
-                                      const bool &             immediate_)
+                                      const basic_properties & props_)
    {
       if (_channel_ok_) {
          amqp_basic_properties_t props = props_to_amqp (props_);
@@ -479,18 +483,55 @@ namespace rabbitmq {
                                        _amqp_ch_,
                                        str_to_amqp (exchange_),
                                        str_to_amqp (routing_key_),
-                                       mandatory_,
-                                       immediate_,
+                                       _publisher_confirm_,      //  'mandatory'
+                                       0,                        //  'immediate' no more supported by amqp
                                        & props,
                                        str_to_amqp (body_));
          if (err != AMQP_STATUS_OK) {
-            throw ::rabbitmq::exception ("basic_publish failure");
-            // todo precisions
+            throw ::rabbitmq::exception ("basic_publish failure with code : " + err);
+         }
+         if (_publisher_confirm_) {
+            bool         basic_return = false;
+            amqp_frame_t frame;
+            while (1) {
+               //  std::clog << "---  confirm steps  ---" << std::endl;
+               err = amqp_simple_wait_frame (_amqp_con_, &frame);
+               if (err != AMQP_STATUS_OK) {
+                  throw ::rabbitmq::exception ("basic_publish confirm failure with code : " + err);
+               } else {
+                  if (frame.frame_type == AMQP_FRAME_METHOD) {
+                     if (frame.payload.method.id == AMQP_BASIC_ACK_METHOD) {
+                        //  std::clog << "basic_publish confirm1 ACK    : channel=" << frame.channel << std::endl;
+                        if (basic_return) {
+                           throw ::rabbitmq::exception ("basic_publish confirm 'return'");
+                        }
+                        break;
+                     } else if (frame.payload.method.id == AMQP_BASIC_RETURN_METHOD) {
+                        basic_return = true;
+                        //  std::clog << "basic_publish confirm1 RETURN : channel=" << frame.channel << std::endl;
+                     } else if (frame.payload.method.id == AMQP_CHANNEL_CLOSE_METHOD) {
+                        //  std::clog << "basic_publish confirm1 CLOSE CHANNEL : channel=" << frame.channel << std::endl;
+                        throw ::rabbitmq::exception ("basic_publish confirm 'close channel'");
+                     } else if (frame.payload.method.id == AMQP_CONNECTION_CLOSE_METHOD) {
+                        //  std::clog << "basic_publish confirm1 CLOSE CONNECTION : channel=" << frame.channel << std::endl;
+                        throw ::rabbitmq::exception ("basic_publish confirm 'close connection'");
+                     } else {
+                        //  std::clog << "basic_publish confirm1 METHOD : channel=" << frame.channel << "  method_id=" << frame.payload.method.id << std::endl;
+                        throw ::rabbitmq::exception ("basic_publish confirm methode code : " + frame.payload.method.id);
+                     }
+                  }
+                  if (frame.frame_type == AMQP_FRAME_HEADER) {
+                     //  std::clog << "basic_publish confirm2 HEADER" << std::endl;
+                  }
+                  if (frame.frame_type == AMQP_FRAME_BODY) {
+                     //  std::clog << "basic_publish confirm3 BODY" << std::endl;
+                  }
+               }
+            }
          }
       } else {
-         throw ::rabbitmq::exception ("no channel for basic_publish");
+         throw ::rabbitmq::exception ("basic_publish channel isn't ok");
       }
-      //  todo return
    }
 
    void channel::impl::basic_consume (const std::string & queue_,

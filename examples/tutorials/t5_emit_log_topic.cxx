@@ -33,8 +33,9 @@ int main (int argc, char** argv)
 void emit_log_topic (const std::string routing_key_, const std::string message_)
 {
    std::clog << "\nTUTORIAL 5 : 'Topics' - emit log topic\n\n" ;
+   const bool                      publisher_confirm = true;
    rabbitmq::connection_parameters c_par;
-   rabbitmq::connection            con (c_par);
+   rabbitmq::connection            con (c_par, publisher_confirm);
    if (con.is_ok ()) {
       rabbitmq::channel &           chan = con.grab_channel ();
       rabbitmq::exchange_parameters x_par;

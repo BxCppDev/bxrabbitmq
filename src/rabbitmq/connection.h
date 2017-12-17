@@ -25,7 +25,8 @@ namespace rabbitmq {
 
      public:
         /// Constructor & co
-        connection  (const connection_parameters & params_);
+        connection  (const connection_parameters & params_,
+                     const bool                    publisher_confirm_ = false);
         //  forbidden
         connection  ()                                    = delete;
         connection  (const connection & con_)             = delete;

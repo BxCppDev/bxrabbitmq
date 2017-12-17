@@ -8,10 +8,11 @@
 namespace rabbitmq {
 
 
-   connection::connection (const connection_parameters & params_)
+   connection::connection (const connection_parameters & params_,
+                           const bool                    publisher_confirm_)
    {
        _params_ = params_;
-       _chan1_.reset (new channel (*this, 1));
+       _chan1_.reset (new channel (*this, 1, publisher_confirm_));
       return;
    }
 

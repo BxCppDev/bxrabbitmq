@@ -22,7 +22,9 @@ namespace rabbitmq {
 
      public:
         /// Constructor & co
-        channel  (const connection & con_, const unsigned int num_);
+        channel  (const connection & con_,
+                  const unsigned int num_,
+                  const bool         publisher_confirm_ = false);
         //  Ctor & co : forbidden
         ~channel ();
         channel  ()                                   = delete;
@@ -42,9 +44,7 @@ namespace rabbitmq {
         void basic_publish    (const std::string           exchange_,
                                const std::string           routing_key_,
                                const std::string           body_,
-                               const basic_properties &    props_     = basic_properties::default_basic_properties (),
-                               const bool                  mandatory_ = false,
-                               const bool                  immediate_ = false);
+                               const basic_properties &    props_     = basic_properties::default_basic_properties ());
 
         void basic_consume    (const std::string           queue_,
                                const std::string           consumer_tag_ = "",

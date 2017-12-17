@@ -63,7 +63,7 @@ namespace rabbitmq {
          props.set_content_type  ("text/plain");
          props.set_delivery_mode (2); // persistant
          for (int i=0; i<10; i++) {
-            chan.basic_publish ("", "q_hello", "Hello_World_" + std::to_string (num + i), props, false, false);
+            chan.basic_publish ("", "q_hello", "Hello_World_" + std::to_string (num + i), props);
          }
          std::clog << "publish to q_hello ..." << std::endl;
       } else {
