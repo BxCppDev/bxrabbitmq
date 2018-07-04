@@ -53,17 +53,17 @@ namespace rabbitmq {
 
         void queue_declare    (queue_parameters &          params_);  // not const -> if not set, return queue name choosen by rabbit
 
-        void queue_bind       (const std::string           queue_,
-                               const std::string           exchange_,
-                               const std::string           bindingkey_ = "");
+        void queue_bind       (const std::string &          queue_,
+                               const std::string &          exchange_,
+                               const std::string &          bindingkey_ = "");
 
-        publish_status_type basic_publish    (const std::string           exchange_,
-                                              const std::string           routing_key_,
-                                              const std::string           body_,
+        publish_status_type basic_publish    (const std::string &          exchange_,
+                                              const std::string &          routing_key_,
+                                              const std::string &          body_,
                                               const basic_properties &    props_     = basic_properties::default_basic_properties ());
 
-        void basic_consume    (const std::string           queue_,
-                               const std::string           consumer_tag_ = "",
+        void basic_consume    (const std::string &          queue_,
+                               const std::string &          consumer_tag_ = "",
                                // const bool                  no_local_     = false,  //  ??
                                const bool                  no_ack_       = false,
                                const bool                  exclusive_    = false);
@@ -81,7 +81,7 @@ namespace rabbitmq {
                                //const uint32_t              prefetch_size_,
                                //const bool                  global);
 
-        void start_consuming  (const msg_consume_func      callback_);
+        void start_consuming  (const msg_consume_func &   callback_);
 
         void stop_consuming   ();
 
@@ -89,7 +89,7 @@ namespace rabbitmq {
 
      private:
         class impl;
-        impl* _pimpl_;
+        impl* _pimpl_ = nullptr;
 
   };
 

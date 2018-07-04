@@ -53,15 +53,15 @@ namespace rabbitmq {
         void basic_consume     (const std::string &           queue_,
                                 const std::string &           consumer_tag_,
                                 //const bool &                  no_local_,
-                                const bool &                  no_ack_,
-                                const bool &                  exclusive_);
+                                const bool                    no_ack_,
+                                const bool                    exclusive_);
      
         consume_status_type
         consume_message        (std::string &                 msg_,
                                 std::string &                 routing_key_,
                                 basic_properties &            props_,
                                 uint64_t &                    delivery_tag_,
-                                const float &                 timeout_sec_);
+                                const float                   timeout_sec_);
 
         void basic_ack         (const uint64_t &              delivery_tag_,
                                 const bool &                  multiple_);
@@ -116,24 +116,24 @@ namespace rabbitmq {
       _pimpl_->queue_declare (params_);
    }
 
-   void channel::queue_bind (const std::string queue_,
-                             const std::string exchange_,
-                             const std::string bindingkey_)
+   void channel::queue_bind (const std::string & queue_,
+                             const std::string & exchange_,
+                             const std::string & bindingkey_)
    {
       _pimpl_->queue_bind (queue_, exchange_, bindingkey_);
    }
 
    publish_status_type
-   channel::basic_publish (const std::string        exchange_,
-                           const std::string        routing_key_,
-                           const std::string        body_,
+   channel::basic_publish (const std::string &       exchange_,
+                           const std::string &       routing_key_,
+                           const std::string &       body_,
                            const basic_properties & props_)
    {
       return _pimpl_->basic_publish (exchange_, routing_key_, body_, props_);
    }
 
-   void channel::basic_consume (const std::string queue_,
-                                const std::string consumer_tag_,
+   void channel::basic_consume (const std::string & queue_,
+                                const std::string & consumer_tag_,
                                 //const bool        no_local_,
                                 const bool        no_ack_,
                                 const bool        exclusive_)
@@ -162,7 +162,7 @@ namespace rabbitmq {
       _pimpl_->basic_qos (prefetch_count_);
    }
 
-   void channel::start_consuming (const msg_consume_func callback_)
+   void channel::start_consuming (const msg_consume_func & callback_)
    {
       _pimpl_->start_consuming (callback_);
    }
@@ -552,8 +552,8 @@ namespace rabbitmq {
    void channel::impl::basic_consume (const std::string & queue_,
                                       const std::string & consumer_tag_,
                                       //const bool &        no_local_,
-                                      const bool &        no_ack_,
-                                      const bool &        exclusive_)
+                                      const bool         no_ack_,
+                                      const bool         exclusive_)
    {
       if (_channel_ok_) {
          if (not _consuming_) {
@@ -583,7 +583,7 @@ namespace rabbitmq {
                                    std::string &      routing_key_,
                                    basic_properties & props_,
                                    uint64_t &         delivery_tag_,
-                                   const float &      timeout_sec_)
+                                   const float        timeout_sec_)
    {
      consume_status_type ret = CONSUME_OK;
       if (_channel_ok_) {
@@ -595,7 +595,7 @@ namespace rabbitmq {
             amqp_envelope_t  envelope;
             if (timeout_sec_ > 0) {
                timeout.tv_sec  = (int) timeout_sec_;
-               timeout.tv_usec = (int) ((timeout_sec_ - timeout.tv_sec) * 1000.0) / 1000;
+               timeout.tv_usec = (int) ((timeout_sec_ - timeout.tv_sec) * 1000000.0);
                p_timeout = &timeout;
             }
             amqp_maybe_release_buffers (_amqp_con_);
