@@ -10,6 +10,22 @@
 namespace rabbitmq {
 
   class connection;
+ 
+  enum publish_status_type {
+    PUBLISH_OK = 0,
+    PUBLISH_ERROR = 1,
+    PUBLISH_NO_CONFIRM = 2,
+    PUBLISH_CLOSED_CHANNEL = 3,
+    PUBLISH_CLOSED_CONNECTION = 4
+  };
+   
+  enum consume_status_type {
+    CONSUME_OK = 0,
+    CONSUME_ERROR = 1,
+    CONSUME_TIMEOUT = 2,
+    CONSUME_MISSING_CHANNEL = 3,
+    CONSUME_BAD_CHANNEL = 4
+  };
 
   /// \brief RabbitMQ Channel
   class channel
@@ -41,22 +57,22 @@ namespace rabbitmq {
                                const std::string           exchange_,
                                const std::string           bindingkey_ = "");
 
-        void basic_publish    (const std::string           exchange_,
-                               const std::string           routing_key_,
-                               const std::string           body_,
-                               const basic_properties &    props_     = basic_properties::default_basic_properties ());
+        publish_status_type basic_publish    (const std::string           exchange_,
+                                              const std::string           routing_key_,
+                                              const std::string           body_,
+                                              const basic_properties &    props_     = basic_properties::default_basic_properties ());
 
         void basic_consume    (const std::string           queue_,
                                const std::string           consumer_tag_ = "",
                                // const bool                  no_local_     = false,  //  ??
                                const bool                  no_ack_       = false,
                                const bool                  exclusive_    = false);
-
-        void consume_message  (std::string &               msg_,
-                               std::string &               routing_key_,
-                               basic_properties &          props_,
-                               uint64_t &                  delivery_tag_,
-                               const float                 timeout_sec_ = -1.0); // négative -> infinity -> blocking
+  
+        consume_status_type consume_message  (std::string &               msg_,
+                                              std::string &               routing_key_,
+                                              basic_properties &          props_,
+                                              uint64_t &                  delivery_tag_,
+                                              const float                 timeout_sec_ = -1.0); // négative -> infinity -> blocking
 
         void basic_ack        (const uint64_t              delivery_tag_,
                                const bool                  multiple_ = false);

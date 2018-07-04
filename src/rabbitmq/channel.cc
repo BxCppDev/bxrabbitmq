@@ -19,7 +19,7 @@
 namespace rabbitmq {
 
    /*******************************************************************************/
-
+    
    class channel::impl
    {
       public:
@@ -44,7 +44,8 @@ namespace rabbitmq {
                                 const std::string &           exchange_,
                                 const std::string &           bindingkey_);
 
-         void basic_publish    (const std::string &           exchange_,
+         publish_status_type
+         basic_publish         (const std::string &           exchange_,
                                 const std::string &           routing_key_,
                                 const std::string &           body_,
                                 const basic_properties &      props_);
@@ -54,8 +55,9 @@ namespace rabbitmq {
                                 //const bool &                  no_local_,
                                 const bool &                  no_ack_,
                                 const bool &                  exclusive_);
-
-        void consume_message   (std::string &                 msg_,
+     
+        consume_status_type
+        consume_message        (std::string &                 msg_,
                                 std::string &                 routing_key_,
                                 basic_properties &            props_,
                                 uint64_t &                    delivery_tag_,
@@ -121,12 +123,13 @@ namespace rabbitmq {
       _pimpl_->queue_bind (queue_, exchange_, bindingkey_);
    }
 
-   void channel::basic_publish (const std::string        exchange_,
-                                const std::string        routing_key_,
-                                const std::string        body_,
-                                const basic_properties & props_)
+   publish_status_type
+   channel::basic_publish (const std::string        exchange_,
+                           const std::string        routing_key_,
+                           const std::string        body_,
+                           const basic_properties & props_)
    {
-      _pimpl_->basic_publish (exchange_, routing_key_, body_, props_);
+      return _pimpl_->basic_publish (exchange_, routing_key_, body_, props_);
    }
 
    void channel::basic_consume (const std::string queue_,
@@ -138,14 +141,15 @@ namespace rabbitmq {
       //_pimpl_->basic_consume (queue_, consumer_tag_, no_local_, no_ack_, exclusive_);
       _pimpl_->basic_consume (queue_, consumer_tag_, no_ack_, exclusive_);
    }
-
-   void channel::consume_message (std::string &      msg_,
-                                  std::string &      routing_key_,
-                                  basic_properties & props_,
-                                  uint64_t &         delivery_tag_,
-                                  const float        timeout_sec_)
+  
+   consume_status_type
+   channel::consume_message (std::string &      msg_,
+                             std::string &      routing_key_,
+                             basic_properties & props_,
+                             uint64_t &         delivery_tag_,
+                             const float        timeout_sec_)
    {
-      _pimpl_->consume_message (msg_, routing_key_, props_, delivery_tag_, timeout_sec_);
+     return _pimpl_->consume_message (msg_, routing_key_, props_, delivery_tag_, timeout_sec_);
    }
 
    void channel::basic_ack (const uint64_t delivery_tag_,
@@ -472,11 +476,13 @@ namespace rabbitmq {
       }
    }
 
-   void channel::impl::basic_publish (const std::string &      exchange_,
-                                      const std::string &      routing_key_,
-                                      const std::string &      body_,
-                                      const basic_properties & props_)
+   publish_status_type
+   channel::impl::basic_publish (const std::string &      exchange_,
+                                 const std::string &      routing_key_,
+                                 const std::string &      body_,
+                                 const basic_properties & props_)
    {
+     publish_status_type ret = PUBLISH_OK;
       if (_channel_ok_) {
          amqp_basic_properties_t props = props_to_amqp (props_);
          int err = amqp_basic_publish (_amqp_con_,
@@ -488,7 +494,9 @@ namespace rabbitmq {
                                        & props,
                                        str_to_amqp (body_));
          if (err != AMQP_STATUS_OK) {
-            throw ::rabbitmq::exception ("basic_publish failure with code : " + err);
+           // throw ::rabbitmq::exception ("basic_publish failure with code : " + err);
+           ret = PUBLISH_ERROR;
+           return ret;
          }
          if (_publisher_confirm_) {
             bool         basic_return = false;
@@ -497,13 +505,16 @@ namespace rabbitmq {
                //  std::clog << "---  confirm steps  ---" << std::endl;
                err = amqp_simple_wait_frame (_amqp_con_, &frame);
                if (err != AMQP_STATUS_OK) {
-                  throw ::rabbitmq::exception ("basic_publish confirm failure with code : " + err);
+                 //throw ::rabbitmq::exception ("basic_publish confirm failure with code : " + err);
+                 ret = PUBLISH_ERROR;
+                 return ret;
                } else {
                   if (frame.frame_type == AMQP_FRAME_METHOD) {
                      if (frame.payload.method.id == AMQP_BASIC_ACK_METHOD) {
                         //  std::clog << "basic_publish confirm1 ACK    : channel=" << frame.channel << std::endl;
                         if (basic_return) {
-                           throw ::rabbitmq::exception ("basic_publish confirm 'return'");
+                          ret = PUBLISH_NO_CONFIRM;
+                          // throw ::rabbitmq::exception ("basic_publish confirm 'return'");
                         }
                         break;
                      } else if (frame.payload.method.id == AMQP_BASIC_RETURN_METHOD) {
@@ -511,13 +522,16 @@ namespace rabbitmq {
                         //  std::clog << "basic_publish confirm1 RETURN : channel=" << frame.channel << std::endl;
                      } else if (frame.payload.method.id == AMQP_CHANNEL_CLOSE_METHOD) {
                         //  std::clog << "basic_publish confirm1 CLOSE CHANNEL : channel=" << frame.channel << std::endl;
-                        throw ::rabbitmq::exception ("basic_publish confirm 'close channel'");
+                       // throw ::rabbitmq::exception ("basic_publish confirm 'close channel'");
+                        ret = PUBLISH_CLOSED_CHANNEL;
                      } else if (frame.payload.method.id == AMQP_CONNECTION_CLOSE_METHOD) {
                         //  std::clog << "basic_publish confirm1 CLOSE CONNECTION : channel=" << frame.channel << std::endl;
-                        throw ::rabbitmq::exception ("basic_publish confirm 'close connection'");
+                       // throw ::rabbitmq::exception ("basic_publish confirm 'close connection'");
+                        ret = PUBLISH_CLOSED_CONNECTION;
                      } else {
                         //  std::clog << "basic_publish confirm1 METHOD : channel=" << frame.channel << "  method_id=" << frame.payload.method.id << std::endl;
-                        throw ::rabbitmq::exception ("basic_publish confirm methode code : " + frame.payload.method.id);
+                        //throw ::rabbitmq::exception ("basic_publish confirm methode code : " + frame.payload.method.id);
+                        ret = PUBLISH_ERROR;
                      }
                   }
                   if (frame.frame_type == AMQP_FRAME_HEADER) {
@@ -532,6 +546,7 @@ namespace rabbitmq {
       } else {
          throw ::rabbitmq::exception ("basic_publish channel isn't ok");
       }
+      return ret;
    }
 
    void channel::impl::basic_consume (const std::string & queue_,
@@ -563,12 +578,14 @@ namespace rabbitmq {
       }
    }
 
-   void channel::impl::consume_message (std::string &      msg_,
-                                        std::string &      routing_key_,
-                                        basic_properties & props_,
-                                        uint64_t &         delivery_tag_,
-                                        const float &      timeout_sec_)
+   consume_status_type
+   channel::impl::consume_message (std::string &      msg_,
+                                   std::string &      routing_key_,
+                                   basic_properties & props_,
+                                   uint64_t &         delivery_tag_,
+                                   const float &      timeout_sec_)
    {
+     consume_status_type ret = CONSUME_OK;
       if (_channel_ok_) {
          if (not _consuming_) {
             bool             is_timeout = false;
@@ -587,21 +604,30 @@ namespace rabbitmq {
                std::cerr << "ERROR consume message unexpected reply type : " << res.reply_type << std::endl;
                std::cerr << "                                 lib err    : " << std::to_string (res.library_error) << std::endl;
                std::cerr << "                                 lib err    : " << amqp_error_string2 (res.library_error) << std::endl;
-               if (res.library_error == -13) is_timeout = true;
+               if (res.library_error == -13) {
+                 is_timeout = true;
+               } else {
+                 ret = CONSUME_ERROR;
+               }
             }
             if (envelope.channel != _amqp_ch_) {
                std::cerr << "ERROR consume message unexpected channel num: " << envelope.channel << std::endl;
+               ret = CONSUME_BAD_CHANNEL;
             }
             delivery_tag_ = envelope.delivery_tag,
             routing_key_  = str_from_amqp   (envelope.routing_key);
             props_        = props_from_amqp (envelope.message.properties);
             msg_          = str_from_amqp   (envelope.message.body);
-            if (is_timeout) msg_ = "timeout";
+            if (is_timeout) {
+              ret = CONSUME_TIMEOUT;
+            }
             amqp_destroy_envelope (&envelope);
          }
       } else {
-         throw ::rabbitmq::exception ("no channel for consume_message");
+        ret = CONSUME_MISSING_CHANNEL;
+        // throw ::rabbitmq::exception ("no channel for consume_message");
       }
+      return ret;
    }
 
    void channel::impl::basic_ack (const uint64_t & delivery_tag_,

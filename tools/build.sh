@@ -34,7 +34,9 @@ install_dir=$(pwd)/_install.d
 build_dir=$(pwd)/_build.d
 
 devel=false
+boost_prefix=
 bxjsontools_prefix=
+with_tests=false
 with_management=false
 
 while [ -n "$1" ]; do
@@ -44,6 +46,11 @@ while [ -n "$1" ]; do
     	my_exit 0
     elif [ "${opt}" = "--mgr" ]; then
     	with_management=true
+    elif [ "${opt}" = "--boost-prefix" ]; then
+	shift 1
+	boost_prefix="$1"
+    elif [ "${opt}" = "--with-tests" ]; then
+	with_tests=true
     elif [ ${with_management} = true -a "${opt}" = "--bxjsontools-prefix" ]; then
 	shift 1
 	bxjsontools_prefix="$1"
@@ -107,7 +114,9 @@ if [ ${with_management} = true ]; then
 fi
 cmake \
     -DCMAKE_INSTALL_PREFIX="${install_dir}" \
+    -DBOOST_ROOT=${boost_prefix} \
     -DBXRABBITMQ_WITH_MANAGER=${with_management} \
+    -DBXRABBITMQ_ENABLE_TESTING=${with_tests} \
     ${with_mgr_opts} \
     ${src_dir}
 if [ $? -ne 0 ]; then
@@ -123,13 +132,15 @@ if [ $? -ne 0 ]; then
     my_exit 1
 fi
 
-#echo >&2 ""
-#echo >&2 "[info] Testing..."
-#make test
-#if [ $? -ne 0 ]; then
-#    echo >&2 "[error] Testing failed! Abort!"
-#    my_exit 1
-#fi
+if [ ${with_tests} = true ]; then
+    echo >&2 ""
+    echo >&2 "[info] Testing..."
+    make test
+    if [ $? -ne 0 ]; then
+	echo >&2 "[error] Testing failed! Abort!"
+	my_exit 1
+    fi
+fi
 
 echo >&2 ""
 echo >&2 "[info] Installing..."
