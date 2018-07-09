@@ -107,6 +107,13 @@ $ make test
 $ make install
 ```
 
+### Quickstart build tools:
+
+```sh
+$ ./tools/build.sh --mgr --boost-prefix $(brew --prefix boost)
+```
+
+
 ## Using bxrabbitmq:
 
 * The ``bxrabbitmq-query`` utility allows you to fetch informations about your

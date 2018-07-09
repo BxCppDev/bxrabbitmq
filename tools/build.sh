@@ -68,6 +68,7 @@ fi
 # curlpp_setup
 # rabbitmqc_setup
 # bxjsontools_setup
+echo >&2 "[info] Boost prefix = ${boost_prefix}"
 
 if [ ${with_management} = true ]; then
     echo >&2 "[info] Checking cURLpp..."

@@ -35,6 +35,7 @@ namespace rabbitmq {
         //  VHOSTS
         bool list_vhosts          (vhost::list       & vhosts_,
                                    error_response    & error_);
+    
 
         bool add_vhost            (const std::string & name_,
                                    error_response    & error_);

@@ -80,6 +80,7 @@ if (BXRABBITMQ_WITH_MANAGER)
 endif()
 
 set(BxRabbitMQ_HEADERS
+  src/rabbitmq/core.h
   src/rabbitmq/exception.h
   src/rabbitmq/basic_properties.h
   src/rabbitmq/parameters.h
@@ -88,6 +89,7 @@ set(BxRabbitMQ_HEADERS
   )
 
 set(BxRabbitMQ_SOURCES
+  src/rabbitmq/core.cc
   src/rabbitmq/exception.cc
   src/rabbitmq/basic_properties.cc
   src/rabbitmq/parameters.cc

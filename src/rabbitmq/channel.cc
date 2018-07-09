@@ -9,6 +9,7 @@
 #include "channel.h"
 #include "connection.h"
 #include "exception.h"
+#include "core.h"
 
 // pimpl rabbitmq-c:
 #include <amqp.h>
@@ -230,7 +231,9 @@ namespace rabbitmq {
          props.content_encoding = str_to_amqp (props_.get_content_encoding ());
       }
       if (props_.has_headers ()) {
-         throw ::rabbitmq::exception ("Unexpected exception : todo headers");
+        if (core::const_instance().is_warning()) {
+          std::cerr << "[warning] rabbitmq::channel::impl::props_to_amqp: Unsupported AMQP headers." << std::endl;
+        }
       }
       if (props_.has_delivery_mode ()) {
          props._flags        = props._flags | AMQP_BASIC_DELIVERY_MODE_FLAG;
@@ -289,7 +292,9 @@ namespace rabbitmq {
          props.set_content_encoding (str_from_amqp (props_.content_encoding));
       }
       if (props_._flags & AMQP_BASIC_HEADERS_FLAG) {
-         throw ::rabbitmq::exception ("Unexpected exception : todo headers");
+        if (core::const_instance().is_warning()) {
+          std::cerr << "[warning] rabbitmq::channel::impl::props_from_amqp: Unsupported AMQP headers." << std::endl;
+        }
       }
       if (props_._flags & AMQP_BASIC_DELIVERY_MODE_FLAG) {
          props.set_delivery_mode (props_.delivery_mode);
@@ -374,8 +379,17 @@ namespace rabbitmq {
                           AMQP_SASL_METHOD_PLAIN,
                           params_.login.c_str (),
                           params_.passwd.c_str ());
+      
+      
       if (reply.reply_type != AMQP_RESPONSE_NORMAL) {
-         throw ::rabbitmq::exception ("Unable to login Rabbit server");
+        std::string error_msg;
+        // if (reply.reply_type == AMQP_RESPONSE_SERVER_EXCEPTION) {
+        //   error_msg = std::string("AMQP_RESPONSE_SERVER_EXCEPTION");
+        // }
+        // if (reply.reply_type == AMQP_RESPONSE_LIBRARY_EXCEPTION) {
+        //   error_msg = std::string(amqp_error_string2(reply.library_error));
+        // }
+        throw ::rabbitmq::exception ("Unable to login Rabbit server" + error_msg);
       }
       _login_ok_ = true;
       amqp_channel_open (_amqp_con_, _amqp_ch_);
