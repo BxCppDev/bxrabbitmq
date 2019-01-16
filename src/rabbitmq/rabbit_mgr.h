@@ -34,8 +34,7 @@ namespace rabbitmq {
 
         //  VHOSTS
         bool list_vhosts          (vhost::list       & vhosts_,
-                                   error_response    & error_);
-    
+                                   error_response    & error_) const;
 
         bool add_vhost            (const std::string & name_,
                                    error_response    & error_);
@@ -46,7 +45,7 @@ namespace rabbitmq {
         //  EXCHANGES
         bool list_exchanges       (const std::string & vhost_,
                                    exchange::list    & exchanges_,
-                                   error_response    & error_);
+                                   error_response    & error_) const;
 
         bool exchange_declare     (const std::string & name_,
                                    const std::string & vhost_,
@@ -63,7 +62,7 @@ namespace rabbitmq {
         //  QUEUES
         bool list_queues          (const std::string & vhost_,
                                    queue::list       & queues_,
-                                   error_response    & error_);
+                                   error_response    & error_) const;
 
         bool queue_declare        (const std::string & name_,
                                    const std::string & vhost_,
@@ -77,7 +76,7 @@ namespace rabbitmq {
 
         //  USERS
         bool list_users           (user::list        & users_,
-                                   error_response    & error_);
+                                   error_response    & error_) const;
 
         bool add_user             (const std::string & name_,
                                    const std::string & passwd_,
@@ -94,12 +93,12 @@ namespace rabbitmq {
         //  USER PERMISSIONS
         bool user_permissions     (const std::string & username_,
                                    permissions::list & permissions_,
-                                   error_response    & error_);
+                                   error_response    & error_) const;
 
         bool user_permissions     (const std::string & username_,
                                    const std::string & vhost_,
                                    permissions       & permissions_,
-                                   error_response    & error_);
+                                   error_response    & error_) const;
 
         bool set_permissions      (const std::string & username_,
                                    const std::string & vhost_,
@@ -123,7 +122,7 @@ namespace rabbitmq {
         void _request_setBaseOpts_ (curlpp::Easy      & request_,
                                     const std::string & cmd_,
                                     const std::string & custom_ = "GET",
-                                    const bool          appli_  = false);
+                                    const bool          appli_  = false) const;
 
         bool _raw_add_user_        (const std::string & name_,
                                     const std::string & tags_,

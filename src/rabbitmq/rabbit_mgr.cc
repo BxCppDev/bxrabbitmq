@@ -72,7 +72,7 @@ namespace rabbitmq {
 
 
    bool rabbit_mgr::list_vhosts (vhost::list    & vhosts_,
-                                 error_response & error_)
+                                 error_response & error_) const
    {
       curlpp::Cleanup cleaner;
       curlpp::Easy    request;
@@ -107,7 +107,7 @@ namespace rabbitmq {
 
    bool rabbit_mgr::list_exchanges (const std::string & vhost_name_,
                                     exchange::list    & exchanges_,
-                                    error_response    & error_)
+                                    error_response    & error_) const
    {
       curlpp::Cleanup        cleaner;
       curlpp::Easy           request;
@@ -155,7 +155,7 @@ namespace rabbitmq {
 
    bool rabbit_mgr::list_queues (const std::string & vhost_name_,
                                     queue::list    & queues_,
-                                    error_response    & error_)
+                                    error_response    & error_) const
    {
       curlpp::Cleanup        cleaner;
       curlpp::Easy           request;
@@ -196,7 +196,7 @@ namespace rabbitmq {
 
 
    bool rabbit_mgr::list_users (user::list     & users_,
-                                error_response & error_)
+                                error_response & error_) const
    {
       curlpp::Cleanup cleaner;
       curlpp::Easy    request;
@@ -265,7 +265,7 @@ namespace rabbitmq {
 
    bool rabbit_mgr::user_permissions (const std::string & username_,
                                       permissions::list & permissions_,
-                                      error_response    & error_)
+                                      error_response    & error_) const
    {
       curlpp::Cleanup cleaner;
       curlpp::Easy    request;
@@ -277,7 +277,7 @@ namespace rabbitmq {
    bool rabbit_mgr::user_permissions (const std::string & username_,
                                       const std::string & vhost_,
                                       permissions       & permissions_,
-                                      error_response    & error_)
+                                      error_response    & error_) const
    {
       curlpp::Cleanup cleaner;
       curlpp::Easy    request;
@@ -320,7 +320,7 @@ namespace rabbitmq {
    void rabbit_mgr::_request_setBaseOpts_ (curlpp::Easy      & request_,
                                            const std::string & cmd_,
                                            const std::string & custom_,
-                                           const bool          appli_)
+                                           const bool          appli_) const
    {
       std::string url  = _server_host_ + ":" + std::to_string (_server_port_) + "/api/" + cmd_;
       std::string upwd = _user_login_ + ":" + _user_passwd_;
