@@ -73,7 +73,7 @@ $ git clone https://github.com/BxCppDev/bxrabbitmq.git bxrabbitmq
 or, for a specific tag:
 
 ```sh
-$ git clone -b '0.3.1' --single-branch https://github.com/BxCppDev/bxrabbitmq.git bxrabbitmq-0.3.1
+$ git clone -b '0.4.2' --single-branch https://github.com/BxCppDev/bxrabbitmq.git bxrabbitmq-0.4.2
 ```
 
 * Configure, build, install:
@@ -81,7 +81,7 @@ $ git clone -b '0.3.1' --single-branch https://github.com/BxCppDev/bxrabbitmq.gi
 ```sh
 $ mkdir -p ${HOME}/bxrabbitmq/_build.d/
 $ cd       ${HOME}/bxrabbitmq/_build.d/
-$ cmake -DCMAKE_INSTALL_PREFIX=../_install.d ../_source.d/bxrabbitmq[-0.1.0]
+$ cmake -DCMAKE_INSTALL_PREFIX=../_install.d ../_source.d/bxrabbitmq[-0.4.2]
 $ make
 $ make test
 $ make install
@@ -101,7 +101,7 @@ $ cmake \
     -DCMAKE_INSTALL_PREFIX=../_install.d \
     -DBXRABBITMQ_WITH_MANAGER=ON \
     -DBxJsontools_DIR=$(bxjsontools-query --cmakedir) \
-    ../_source.d/bxrabbitmq[-0.1.0]
+    ../_source.d/bxrabbitmq[-0.4.2]
 $ make
 $ make test
 $ make install
