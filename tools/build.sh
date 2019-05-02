@@ -22,6 +22,8 @@ Options:
 
   --help   print this help then exit
   --mgr    build the RabbitMQ management API
+  --boost-root path
+           set the Boost installation prefix 
   --bxjsontools-prefix path
            set the bxjsontools installation prefix (implies --mgr)
 
@@ -34,7 +36,7 @@ install_dir=$(pwd)/_install.d
 build_dir=$(pwd)/_build.d
 
 devel=false
-boost_prefix=
+boost_root=
 bxjsontools_prefix=
 with_tests=false
 with_management=false
@@ -46,9 +48,9 @@ while [ -n "$1" ]; do
     	my_exit 0
     elif [ "${opt}" = "--mgr" ]; then
     	with_management=true
-    elif [ "${opt}" = "--boost-prefix" ]; then
+    elif [ "${opt}" = "--boost-root" ]; then
 	shift 1
-	boost_prefix="$1"
+	boost_root="$1"
     elif [ "${opt}" = "--with-tests" ]; then
 	with_tests=true
     elif [ ${with_management} = true -a "${opt}" = "--bxjsontools-prefix" ]; then
@@ -68,7 +70,7 @@ fi
 # curlpp_setup
 # rabbitmqc_setup
 # bxjsontools_setup
-echo >&2 "[info] Boost prefix = ${boost_prefix}"
+echo >&2 "[info] Boost root = ${boost_root}"
 
 if [ ${with_management} = true ]; then
     echo >&2 "[info] Checking cURLpp..."
@@ -109,13 +111,17 @@ mkdir -p ${build_dir}
 cd ${build_dir}
 echo >&2 ""
 echo >&2 "[info] Configuring..."
+boost_option=""
+if [ "x${boost_root}" != "x" ]; then
+    boost_option="-DBOOST_ROOT=${boost_root}"
+fi
 with_mgr_opts=""
 if [ ${with_management} = true ]; then
     with_mgr_opts="-DBxJsontools_DIR=${bxjsontools_prefix}"
 fi
 cmake \
     -DCMAKE_INSTALL_PREFIX="${install_dir}" \
-    -DBOOST_ROOT=${boost_prefix} \
+    ${boost_option} \
     -DBXRABBITMQ_WITH_MANAGER=${with_management} \
     -DBXRABBITMQ_ENABLE_TESTING=${with_tests} \
     ${with_mgr_opts} \
