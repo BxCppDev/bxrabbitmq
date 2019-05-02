@@ -18,11 +18,40 @@ bxrabbitmq makes use or is based on:
 * RabbitMQ HTTP-based API for server admin (https://www.rabbitmq.com/management.html)
 
 bxrabbitmq depends on:
-* The RabbitMQ-C client library (https://github.com/alanxz/rabbitmq-c),
+* The RabbitMQ-C client library (https://github.com/alanxz/rabbitmq-c)
+
+  On Ubuntu 18.04 : librabbitmq 0.8.0
+  
+  ```
+  $ sudo apt-get install librabbitmq-dev librabbitmq4
+  ```
+
 * Boost (version >=1.58, but former version may work)
-* cURLpp (https://github.com/jpbarrette/curlpp) for optional server management code,
-* BxJsontools (https://github.com/BxCppDev/bxjsontools) for optional server management code,
-* CMake and pkgconfig for build and install.
+
+  On Ubuntu 18.04 : Boost 1.65.1
+  
+  ```
+  $ sudo apt-get install libboost-all-dev
+  ```
+
+* cURLpp (https://github.com/jpbarrette/curlpp) for optional server management code
+
+  On Ubuntu 18.04 : libcurl 7.58.0
+  
+  ```
+  $ sudo apt-get install libcurl4-openssl-dev libcurl4
+  $ sudo apt-get install libcurlpp-dev libcurlpp0
+  ```
+
+* BxJsontools (https://github.com/BxCppDev/bxjsontools) for optional server management code
+  
+* CMake and pkgconfig for build and install
+
+  On Ubuntu 18.04 : CMake 3.10.2, pkgconfig 0.29.1
+  
+  ```
+  $ sudo apt-get install cmake pkg-config
+  ```
 
 ## License:
 
