@@ -46,7 +46,7 @@ while [ -n "$1" ]; do
     if [ "${opt}" = "--help" ]; then
 	do_usage
     	my_exit 0
-    elif [ "${opt}" = "--mgr" ]; then
+    elif [ "${opt}" = "--mgr" -o "${opt}" = "--with-manager" ]; then
     	with_management=true
     elif [ "${opt}" = "--boost-root" ]; then
 	shift 1
@@ -62,6 +62,11 @@ done
 
 if [ ${with_management} = true ]; then
     if [ "x${bxjsontools_prefix}" = "x" ]; then
+	which bxjsontools-query > /dev/null 2>&1
+	if [ $? -ne 0 ]; then
+	    echo >&2 "[error] No 'bxjsontools-query' script! Abort!"
+	    my_exit 1	    
+	fi
 	bxjsontools_prefix=$(bxjsontools-query --cmakedir)
     fi
 fi
@@ -115,16 +120,18 @@ boost_option=""
 if [ "x${boost_root}" != "x" ]; then
     boost_option="-DBOOST_ROOT=${boost_root}"
 fi
-with_mgr_opts=""
+
+manager_optionss=""
 if [ ${with_management} = true ]; then
-    with_mgr_opts="-DBxJsontools_DIR=${bxjsontools_prefix}"
+    manager_optionss="-DBxJsontools_DIR=${bxjsontools_prefix}"
 fi
+
 cmake \
     -DCMAKE_INSTALL_PREFIX="${install_dir}" \
     ${boost_option} \
     -DBXRABBITMQ_WITH_MANAGER=${with_management} \
     -DBXRABBITMQ_ENABLE_TESTING=${with_tests} \
-    ${with_mgr_opts} \
+    ${manager_optionss} \
     ${src_dir}
 if [ $? -ne 0 ]; then
     echo >&2 "[error] CMake failed! Abort!"

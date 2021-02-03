@@ -22,7 +22,7 @@ include(BxVersionManager)
 
 # - Versioning only giving major and minor. Patch number is
 #   0 or automatically deduced from an external file.
-bx_version_set(BxRabbitMQ 0 4)
+bx_version_set(BxRabbitMQ 1 0)
 
 #-----------------------------------------------------------------------
 # - Standard UNIX Tool install paths, including relative paths for use
