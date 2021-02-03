@@ -10,6 +10,11 @@ This is a very preliminary work that needs more development and tests.
 bxrabbitmq  has  been initiated  in  the  framework of  the  SuperNEMO
 physics experiment software.
 
+## Versions
+
+Current version: 1.0.0 (2021-02-03)
+
+
 ## Dependencies and inspiration
 
 bxrabbitmq makes use or is based on:
