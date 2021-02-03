@@ -18,17 +18,20 @@ bxrabbitmq makes use or is based on:
 * RabbitMQ HTTP-based API for server admin (https://www.rabbitmq.com/management.html)
 
 bxrabbitmq depends on:
+
 * The RabbitMQ-C client library (https://github.com/alanxz/rabbitmq-c)
 
-  On Ubuntu 18.04 : librabbitmq 0.8.0
+  * On Ubuntu 18.04 : librabbitmq 0.8.0
+  * On Ubuntu 20.04 : librabbitmq 0.10.0
   
   ```
-  $ sudo apt-get install librabbitmq-dev librabbitmq4
+  $ sudo apt-get install librabbitmq-dev
   ```
 
-* Boost (version >=1.58, but former version may work)
+* Boost (version >=1.65, but former version may work)
 
-  On Ubuntu 18.04 : Boost 1.65.1
+  * On Ubuntu 18.04 : Boost 1.65.1
+  * On Ubuntu 20.04 : Boost 1.71.0
   
   ```
   $ sudo apt-get install libboost-all-dev
@@ -36,18 +39,20 @@ bxrabbitmq depends on:
 
 * cURLpp (https://github.com/jpbarrette/curlpp) for optional server management code
 
-  On Ubuntu 18.04 : libcurl 7.58.0
+  * On Ubuntu 18.04 : libcurl 7.58.0
+  * On Ubuntu 20.04 : libcurl 7.68.0
   
   ```
   $ sudo apt-get install libcurl4-openssl-dev libcurl4
-  $ sudo apt-get install libcurlpp-dev libcurlpp0
+  $ sudo apt-get install libcurlpp-dev
   ```
 
 * BxJsontools (https://github.com/BxCppDev/bxjsontools) for optional server management code
   
 * CMake and pkgconfig for build and install
 
-  On Ubuntu 18.04 : CMake 3.10.2, pkgconfig 0.29.1
+  * On Ubuntu 18.04 : CMake 3.10.2, pkg-config 0.29.1
+  * On Ubuntu 20.04 : CMake 3.16.3, pkg-config 0.29.1
   
   ```
   $ sudo apt-get install cmake pkg-config
@@ -85,7 +90,8 @@ $ cmake --help-module FindBoost
 
 **Note:**
 
-* 2017-09-26: Linuxbrew formula for rabbitmq-c is available from Linuxbrew
+* 2017-09-26: (OBSOLETE 2020-02-03) :
+Linuxbrew formula for rabbitmq-c is available from Linuxbrew
 core tap. Formulas for bxjsontools and bxrabbitmq are available from
 the  https://github.com/BxCppDev/homebrew-bxtap.
 
